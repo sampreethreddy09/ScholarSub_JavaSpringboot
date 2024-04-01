@@ -1,4 +1,4 @@
-package com.demo.demo.dto;
+package com.demo.dto;
 
 public class LoginRequest {
     private String uname;

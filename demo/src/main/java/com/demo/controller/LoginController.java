@@ -1,10 +1,10 @@
-package com.demo.demo.controller;
+package com.demo.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.demo.dto.LoginRequest;
-import com.demo.demo.service.StudentService;
-import com.demo.demo.service.TeacherService;
+import com.demo.dto.LoginRequest;
+import com.demo.service.StudentService;
+import com.demo.service.TeacherService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

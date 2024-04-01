@@ -75,7 +75,7 @@ CREATE TABLE `Assignment` (
   `constraints` varchar(255) DEFAULT NULL, --  could be on file type , size etc..
   `input_files_there` BOOLEAN DEFAULT 0,  -- if there is a assgn manual , or input files (0 - nothing , 1 - there are files);
   `is_evaluated` BOOLEAN DEFAULT 0, -- if the assignment is evaluated or not
-  `max_marks` INT DEFAULT 10
+  `max_marks` INT DEFAULT 10,
 
   PRIMARY KEY (`a_id`),
   KEY `fk_assignment_sec_id` (`sec_id`),
@@ -181,97 +181,97 @@ insert into Teacher values ("PES1PR21CS001","Alexa","alexa@gmail.com","mxdxpx"),
 insert into Section values ("PES21CSDA1","DA Section-1",72,"PES1PR21CS001"),
                             ("PES21CSLMI","MI L Section",65,"PES1JP21CS021");
 
--- INSERT INTO Assignment (name, start_time, end_time, allow_late_submission, sec_id, description, constraints, input_files_there, is_evaluated, max_marks)
--- VALUES
---   ("Assignment 1", "2023-10-05 00:00:00", "2023-10-07 23:59:59", 1, "PES21CSDA1", "Description 1", "Constraints 1", 0, 0, 10),
---   ("Assignment 2", "2023-10-20 00:00:00", "2023-10-25 23:59:59", 0, "PES21CSDA1", "Description 2", "Constraints 2", 0, 0, 10),
---   ("Assignment 3", "2023-11-01 00:00:00", "2023-11-05 23:59:59", 1, "PES21CSLMI", "Description 3", "Constraints 3", 1, 0, 10);
+INSERT INTO Assignment (name, start_time, end_time, allow_late_submission, sec_id, description, constraints, input_files_there, is_evaluated, max_marks)
+VALUES
+  ("Assignment 1", "2024-04-01 00:00:00", "2024-04-05 23:59:59", 1, "PES21CSDA1", "Description 1", "Constraints 1", 0, 0, 10),
+  ("Assignment 2", "2024-04-01 00:00:00", "2024-04-04 23:59:59", 0, "PES21CSDA1", "Description 2", "Constraints 2", 0, 0, 10),
+  ("Assignment 3", "2024-04-01 00:00:00", "2024-04-03 23:59:59", 1, "PES21CSLMI", "Description 3", "Constraints 3", 1, 0, 10);
 
 
--- INSERT INTO Section_Student (sec_id, s_id)
--- VALUES
---   ("PES21CSDA1", "PES1UG21CS235"),
---   ("PES21CSDA1", "PES1UG21CS420"),
---   ("PES21CSDA1", "PES1UG21CS680"),
---   ("PES21CSDA1", "PES1UG21CS681"),
---   ("PES21CSDA1", "PES1UG21CS684"),
---   ("PES21CSDA1", "PES1UG21CS700"),
---   ("PES21CSDA1", "PES1UG21CS736");
+INSERT INTO Section_Student (sec_id, s_id)
+VALUES
+  ("PES21CSDA1", "PES1UG21CS235"),
+  ("PES21CSDA1", "PES1UG21CS420"),
+  ("PES21CSDA1", "PES1UG21CS680"),
+  ("PES21CSDA1", "PES1UG21CS681"),
+  ("PES21CSDA1", "PES1UG21CS684"),
+  ("PES21CSDA1", "PES1UG21CS700"),
+  ("PES21CSDA1", "PES1UG21CS736");
 
--- INSERT INTO Section_Student (sec_id, s_id)
--- VALUES
---   ("PES21CSLMI", "PES1UG21CS235"),
---   ("PES21CSLMI", "PES1UG21CS420"),
---   ("PES21CSLMI", "PES1UG21CS680"),
---   ("PES21CSLMI", "PES1UG21CS681"),
---   ("PES21CSLMI", "PES1UG21CS684"),
---   ("PES21CSLMI", "PES1UG21CS700"),
---   ("PES21CSLMI", "PES1UG21CS736");
+INSERT INTO Section_Student (sec_id, s_id)
+VALUES
+  ("PES21CSLMI", "PES1UG21CS235"),
+  ("PES21CSLMI", "PES1UG21CS420"),
+  ("PES21CSLMI", "PES1UG21CS680"),
+  ("PES21CSLMI", "PES1UG21CS681"),
+  ("PES21CSLMI", "PES1UG21CS684"),
+  ("PES21CSLMI", "PES1UG21CS700"),
+  ("PES21CSLMI", "PES1UG21CS736");
 
 
--- Procedure for listing SRN's of students who have not made a submission :
+-- -- Procedure for listing SRN's of students who have not made a submission :
 
-DELIMITER //
+-- DELIMITER //
 
-CREATE PROCEDURE ListStudentsWithoutSubmission(IN a_id_param INT)
-BEGIN
-    SELECT DISTINCT S.s_id
-    FROM Student S
-    JOIN Section_Student SS ON S.s_id = SS.s_id
-    JOIN Section SE ON SS.sec_id = SE.sec_id
-    JOIN Assignment A ON SE.sec_id = A.sec_id AND A.a_id = a_id_param
-    LEFT JOIN Submission SB ON S.s_id = SB.s_id AND A.a_id = SB.a_id
-    WHERE SB.sub_id IS NULL;
+-- CREATE PROCEDURE ListStudentsWithoutSubmission(IN a_id_param INT)
+-- BEGIN
+--     SELECT DISTINCT S.s_id
+--     FROM Student S
+--     JOIN Section_Student SS ON S.s_id = SS.s_id
+--     JOIN Section SE ON SS.sec_id = SE.sec_id
+--     JOIN Assignment A ON SE.sec_id = A.sec_id AND A.a_id = a_id_param
+--     LEFT JOIN Submission SB ON S.s_id = SB.s_id AND A.a_id = SB.a_id
+--     WHERE SB.sub_id IS NULL;
 
-END //
+-- END //
 
-DELIMITER ;
+-- DELIMITER ;
 
--- Below is a stored procedure that takes an a_id as input and returns the maximum, minimum, average marks obtained, and the total marks for that assignment:
+-- -- Below is a stored procedure that takes an a_id as input and returns the maximum, minimum, average marks obtained, and the total marks for that assignment:
 
-DELIMITER //
+-- DELIMITER //
 
-CREATE PROCEDURE GetAssignmentStats(IN a_id_param INT)
-BEGIN
-    DECLARE max_mark INT;
-    DECLARE min_marks INT;
-    DECLARE avg_marks FLOAT;
-    DECLARE total_marks INT;
+-- CREATE PROCEDURE GetAssignmentStats(IN a_id_param INT)
+-- BEGIN
+--     DECLARE max_mark INT;
+--     DECLARE min_marks INT;
+--     DECLARE avg_marks FLOAT;
+--     DECLARE total_marks INT;
 
-    -- Get maximum marks
-    SELECT MAX(obtained_marks) INTO max_mark
-    FROM Result
-    WHERE sub_id IN (SELECT sub_id FROM Submission WHERE a_id = a_id_param);
+--     -- Get maximum marks
+--     SELECT MAX(obtained_marks) INTO max_mark
+--     FROM Result
+--     WHERE sub_id IN (SELECT sub_id FROM Submission WHERE a_id = a_id_param);
 
-    -- Get minimum marks
-    SELECT MIN(obtained_marks) INTO min_marks
-    FROM Result
-    WHERE sub_id IN (SELECT sub_id FROM Submission WHERE a_id = a_id_param);
+--     -- Get minimum marks
+--     SELECT MIN(obtained_marks) INTO min_marks
+--     FROM Result
+--     WHERE sub_id IN (SELECT sub_id FROM Submission WHERE a_id = a_id_param);
 
-    -- Get average marks
-    SELECT AVG(obtained_marks) INTO avg_marks
-    FROM Result
-    WHERE sub_id IN (SELECT sub_id FROM Submission WHERE a_id = a_id_param);
+--     -- Get average marks
+--     SELECT AVG(obtained_marks) INTO avg_marks
+--     FROM Result
+--     WHERE sub_id IN (SELECT sub_id FROM Submission WHERE a_id = a_id_param);
 
-    -- Get total marks
-    SELECT max_marks INTO total_marks
-    FROM assignment
-    WHERE a_id = a_id_param;
+--     -- Get total marks
+--     SELECT max_marks INTO total_marks
+--     FROM assignment
+--     WHERE a_id = a_id_param;
 
-    -- Return the results
-    SELECT max_mark, min_marks, avg_marks, total_marks;
-END //
+--     -- Return the results
+--     SELECT max_mark, min_marks, avg_marks, total_marks;
+-- END //
 
-DELIMITER ;
+-- DELIMITER ;
 
--- Trigger for submission
-DELIMITER //
+-- -- Trigger for submission
+-- DELIMITER //
 
-CREATE TRIGGER onSubmission 
-AFTER INSERT ON Submission
-FOR EACH ROW
-BEGIN
-  INSERT INTO Result VALUES (NEW.sub_id, 0, NULL);
-END//
+-- CREATE TRIGGER onSubmission 
+-- AFTER INSERT ON Submission
+-- FOR EACH ROW
+-- BEGIN
+--   INSERT INTO Result VALUES (NEW.sub_id, 0, NULL);
+-- END//
 
-DELIMITER ;
+-- DELIMITER ;

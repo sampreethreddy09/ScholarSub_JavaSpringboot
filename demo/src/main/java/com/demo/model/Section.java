@@ -1,4 +1,4 @@
-package com.demo.demo.model;
+package com.demo.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,7 +25,7 @@ public class Section {
     @JoinColumn(name = "t_id")
     private Teacher teacher;
 
-    // Constructors, getters, and setters
+    // Constructors
 
     public Section() {
     }

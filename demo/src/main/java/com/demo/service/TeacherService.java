@@ -1,10 +1,10 @@
-package com.demo.demo.service;
+package com.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.demo.demo.model.Teacher;
-import com.demo.demo.repository.TeacherRepository;
+import com.demo.model.Teacher;
+import com.demo.repository.TeacherRepository;
 
 @Service
 public class TeacherService {
