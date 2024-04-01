@@ -23,9 +23,7 @@ public class AssignmentService {
 
     public List<Assignment> loadLiveAssignments(String studentId) {
         List<String> sectionIds = sectionStudentRepository.findSectionIdsByStudentId(studentId);
-        System.out.println("sectionIds: " + sectionIds);
         LocalDateTime currentTime = LocalDateTime.now();
-        System.out.println("currentTime: " + currentTime);
         return assignmentRepository.findBySectionIdIn(sectionIds)
                 .stream()
                 .filter(assignment -> assignment.getEndTime().isAfter(currentTime))
