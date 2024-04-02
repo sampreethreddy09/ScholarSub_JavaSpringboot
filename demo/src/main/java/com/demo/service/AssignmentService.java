@@ -11,6 +11,7 @@ import com.demo.model.File;
 import com.demo.repository.AssignmentFilesRepository;
 import com.demo.repository.AssignmentRepository;
 import com.demo.repository.FileRepository;
+import com.demo.repository.SectionRepository;
 import com.demo.repository.SectionStudentRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -25,17 +26,41 @@ public class AssignmentService {
 
     private final AssignmentRepository assignmentRepository;
     private final SectionStudentRepository sectionStudentRepository;
+    private final SectionRepository sectionRepository;
     private final AssignmentFilesRepository assignmentFilesRepository;
     private final FileRepository fileRepository;
 
+  
+
     
     public AssignmentService(AssignmentRepository assignmentRepository, SectionStudentRepository sectionStudentRepository, AssignmentFilesRepository assignmentFilesRepository,
-    FileRepository fileRepository) {
+    FileRepository fileRepository, SectionRepository sectionRepository) {
         this.assignmentRepository = assignmentRepository;
         this.sectionStudentRepository = sectionStudentRepository;
         this.assignmentFilesRepository = assignmentFilesRepository;
         this.fileRepository = fileRepository;
+        this.sectionRepository = sectionRepository;
     }
+
+    public List<Assignment> loadLiveAssignmentsByTeacher(String teacherId) {
+        List<String> sectionIds = sectionRepository.findSectionIdsByTeacherId(teacherId);
+        LocalDateTime currentTime = LocalDateTime.now();
+        return assignmentRepository.findBySectionIdIn(sectionIds)
+                .stream()
+                .filter(assignment -> assignment.getEndTime().isAfter(currentTime))
+                .collect(Collectors.toList());
+    }
+    public List<Assignment> loadPastAssignmentsByTeacher(String teacherId) {
+        List<String> sectionIds = sectionRepository.findSectionIdsByTeacherId(teacherId);
+        LocalDateTime currentTime = LocalDateTime.now();
+        return assignmentRepository.findBySectionIdIn(sectionIds)
+                .stream()
+                .filter(assignment -> assignment.getEndTime().isBefore(currentTime))
+                .collect(Collectors.toList());
+    }
+
+       
+    
 
 
     @Transactional
@@ -107,31 +132,6 @@ public class AssignmentService {
                 .collect(Collectors.toList());
     }
 
-    // public Assignment loadAssignmentDetails(int assignmentId) {
-    //     Assignment assignment = assignmentRepository.findById(assignmentId)
-    //             .orElseThrow(() -> new EntityNotFoundException("Assignment not found"));
-
-    //     // AssignmentDTO assignmentDTO = new AssignmentDTO();
-    //     // assignmentDTO.setId(assignment.getId());
-    //     // assignmentDTO.setName(assignment.getName());
-    //     // assignmentDTO.setStartTime(assignment.getStartTime());
-    //     // assignmentDTO.setEndTime(assignment.getEndTime());
-    //     // assignmentDTO.setAllowLateSubmission(assignment.isAllowLateSubmission());
-    //     // assignmentDTO.setScheduleRightNow(assignment.isScheduleRightNow());
-
-    //     if (assignment.isInputFilesThere()) {
-    //         List<File> files = FileRepository.findByAssignmentId(assignmentId);
-    //         // List<File> fileDTOs = files.stream().map(file -> {
-    //         //     FileDTO fileDTO = new FileDTO();
-    //         //     fileDTO.setName(file.getName());
-    //         //     fileDTO.setPath(file.getPath());
-    //         //     fileDTO.setExtension(file.getExtension());
-    //         //     return fileDTO;
-    //         // }).collect(Collectors.toList());
-
-    //         assignmentDTO.setFiles(fileDTOs);
-    //     }
-
-    //     return assignmentDTO;
-    // }
+    
 }
+
