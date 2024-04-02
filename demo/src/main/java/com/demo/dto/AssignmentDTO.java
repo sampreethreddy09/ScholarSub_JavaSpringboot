@@ -10,12 +10,20 @@ public class AssignmentDTO {
     private boolean allowLateSubmission;
     private boolean scheduleRightNow;
     private String secId;
+    private String description;
+    private String constraints;
+    private boolean inputFilesThere;
+    private boolean evaluated;
+    private int maxMarks;
+
+    // constructors
 
     public AssignmentDTO() {
     }
 
-    public AssignmentDTO(int id, String name, LocalDateTime startTime, LocalDateTime endTime, boolean allowLateSubmission,
-            boolean scheduleRightNow, String secId) {
+    public AssignmentDTO(int id, String name, LocalDateTime startTime, LocalDateTime endTime,
+            boolean allowLateSubmission, boolean scheduleRightNow, String secId, String description, String constraints,
+            boolean inputFilesThere, boolean evaluated, int maxMarks) {
         this.id = id;
         this.name = name;
         this.startTime = startTime;
@@ -23,9 +31,14 @@ public class AssignmentDTO {
         this.allowLateSubmission = allowLateSubmission;
         this.scheduleRightNow = scheduleRightNow;
         this.secId = secId;
+        this.description = description;
+        this.constraints = constraints;
+        this.inputFilesThere = inputFilesThere;
+        this.evaluated = evaluated;
+        this.maxMarks = maxMarks;
     }
 
-    // Getters and setters
+    // getters and setters
 
     public int getId() {
         return id;
@@ -81,6 +94,46 @@ public class AssignmentDTO {
 
     public void setSecId(String secId) {
         this.secId = secId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getConstraints() {
+        return constraints;
+    }
+
+    public void setConstraints(String constraints) {
+        this.constraints = constraints;
+    }
+
+    public boolean isInputFilesThere() {
+        return inputFilesThere;
+    }
+
+    public void setInputFilesThere(boolean inputFilesThere) {
+        this.inputFilesThere = inputFilesThere;
+    }
+
+    public boolean isEvaluated() {
+        return evaluated;
+    }
+
+    public void setEvaluated(boolean evaluated) {
+        this.evaluated = evaluated;
+    }
+
+    public int getMaxMarks() {
+        return maxMarks;
+    }
+
+    public void setMaxMarks(int maxMarks) {
+        this.maxMarks = maxMarks;
     }
 
     

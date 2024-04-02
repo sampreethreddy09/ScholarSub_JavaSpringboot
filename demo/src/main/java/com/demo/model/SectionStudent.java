@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "Section_Student")
 @IdClass(SectionStudentId.class)
 public class SectionStudent {
+    
     @Id
     @ManyToOne
     @JoinColumn(name = "sec_id")
