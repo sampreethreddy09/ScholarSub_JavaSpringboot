@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 ../uploaded_files/
+../.vscode/
 
 ### STS ###
 .apt_generated
@@ -30,6 +31,5 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
-../.vscode/
+
 
