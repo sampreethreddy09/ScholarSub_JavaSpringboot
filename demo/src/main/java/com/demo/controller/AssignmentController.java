@@ -22,6 +22,47 @@ public class AssignmentController {
         this.assignmentService = assignmentService;
     }
 
+    @GetMapping("/teacher/liveassignments/{teacherId}")
+     public List<AssignmentDTO> loadLiveAssignmentsByTeacher(@PathVariable String teacherId) {
+        List<Assignment> assignments = assignmentService.loadLiveAssignmentsByTeacher(teacherId);
+        List<AssignmentDTO> assignmentDTOs = new ArrayList<>();
+
+        for (Assignment assignment : assignments) {
+            AssignmentDTO dto = new AssignmentDTO();
+            dto.setId(assignment.getId());
+            dto.setName(assignment.getName());
+            dto.setStartTime(assignment.getStartTime());
+            dto.setEndTime(assignment.getEndTime());
+            dto.setAllowLateSubmission(assignment.isAllowLateSubmission());
+            dto.setScheduleRightNow(assignment.isScheduleRightNow());
+            dto.setSecId(assignment.getSection().getId()); // Set only sec_id
+            assignmentDTOs.add(dto);
+        }
+
+        return assignmentDTOs;
+    }
+    @GetMapping("/teacher/pastassignments/{teacherId}")
+     public List<AssignmentDTO> loadPastAssignmentsByTeacher(@PathVariable String teacherId) {
+        List<Assignment> assignments = assignmentService.loadPastAssignmentsByTeacher(teacherId);
+        List<AssignmentDTO> assignmentDTOs = new ArrayList<>();
+
+        for (Assignment assignment : assignments) {
+            AssignmentDTO dto = new AssignmentDTO();
+            dto.setId(assignment.getId());
+            dto.setName(assignment.getName());
+            dto.setStartTime(assignment.getStartTime());
+            dto.setEndTime(assignment.getEndTime());
+            dto.setAllowLateSubmission(assignment.isAllowLateSubmission());
+            dto.setScheduleRightNow(assignment.isScheduleRightNow());
+            dto.setSecId(assignment.getSection().getId()); // Set only sec_id
+            assignmentDTOs.add(dto);
+        }
+
+        return assignmentDTOs;
+    }
+
+
+
     @GetMapping("/assignments/live/{studentId}")
      public List<AssignmentDTO> loadLiveAssignments(@PathVariable String studentId) {
         List<Assignment> assignments = assignmentService.loadLiveAssignments(studentId);
