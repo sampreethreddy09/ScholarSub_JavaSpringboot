@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "File")
-public class File {
+public class Fil {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "f_id")
@@ -24,10 +24,11 @@ public class File {
 
     // Constructors
 
-    public File() {
+    public Fil() {
     }
 
-    public File(String name, String type, Integer size, String path) {
+    public Fil(int id,String name, String type, int size, String path) {
+        this.id = id;
         this.name = name;
         this.type = type;
         this.size = size;

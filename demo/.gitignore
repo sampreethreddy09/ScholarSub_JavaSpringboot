@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+### Skip uploaded_files ###
+../uploaded_files/

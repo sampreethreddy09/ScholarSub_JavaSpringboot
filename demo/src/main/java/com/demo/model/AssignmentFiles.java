@@ -15,14 +15,14 @@ public class AssignmentFiles {
     @Id
     @ManyToOne
     @JoinColumn(name = "f_id")
-    private File file;
+    private Fil file;
 
     // Constructors
 
     public AssignmentFiles() {
     }
 
-    public AssignmentFiles(Assignment assignment, File file) {
+    public AssignmentFiles(Assignment assignment, Fil file) {
         this.assignment = assignment;
         this.file = file;
     }
@@ -37,11 +37,11 @@ public class AssignmentFiles {
         this.assignment = assignment;
     }
 
-    public File getFile() {
+    public Fil getFile() {
         return file;
     }
 
-    public void setFile(File file) {
+    public void setFile(Fil file) {
         this.file = file;
     }
 }

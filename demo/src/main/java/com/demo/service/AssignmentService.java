@@ -7,7 +7,7 @@ import com.demo.dto.AssignmentDetailsDTO;
 import com.demo.dto.FileDTO;
 import com.demo.model.Assignment;
 import com.demo.model.AssignmentFiles;
-import com.demo.model.File;
+import com.demo.model.Fil;
 import com.demo.repository.AssignmentFilesRepository;
 import com.demo.repository.AssignmentRepository;
 import com.demo.repository.FileRepository;
@@ -59,11 +59,6 @@ public class AssignmentService {
                 .collect(Collectors.toList());
     }
 
-       
-    
-
-
-    @Transactional
     public AssignmentDetailsDTO loadAssignmentDetails(int assignmentId) {
         Assignment assignment = assignmentRepository.findById(assignmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Assignment not found"));
@@ -74,11 +69,11 @@ public class AssignmentService {
         // Collect file IDs associated with the assignment
         List<Integer> fileIds = assignmentFilesList.stream()
                 .map(AssignmentFiles::getFile)
-                .map(File::getId)
+                .map(Fil::getId)
                 .collect(Collectors.toList());
 
         // Load file details based on the file IDs
-        List<File> files = fileRepository.findAllById(fileIds);
+        List<Fil> files = fileRepository.findAllById(fileIds);
 
         // Prepare AssignmentDTO
         AssignmentDTO assignmentDTO = new AssignmentDTO();
