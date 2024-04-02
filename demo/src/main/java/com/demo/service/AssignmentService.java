@@ -15,7 +15,6 @@ import com.demo.repository.SectionRepository;
 import com.demo.repository.SectionStudentRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
