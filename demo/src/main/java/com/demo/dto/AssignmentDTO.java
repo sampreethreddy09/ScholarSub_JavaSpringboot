@@ -1,12 +1,13 @@
 package com.demo.dto;
 
+import java.util.Date;
 import java.time.LocalDateTime;
 
 public class AssignmentDTO {
     private int id;
     private String name;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Date startTime;
+    private Date endTime;
     private boolean allowLateSubmission;
     private boolean scheduleRightNow;
     private String secId;
@@ -21,7 +22,7 @@ public class AssignmentDTO {
     public AssignmentDTO() {
     }
 
-    public AssignmentDTO(int id, String name, LocalDateTime startTime, LocalDateTime endTime,
+    public AssignmentDTO(int id, String name, Date startTime, Date endTime,
             boolean allowLateSubmission, boolean scheduleRightNow, String secId, String description, String constraints,
             boolean inputFilesThere, boolean evaluated, int maxMarks) {
         this.id = id;
@@ -56,20 +57,20 @@ public class AssignmentDTO {
         this.name = name;
     }
 
-    public LocalDateTime getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    public void setStartTime(Date date) {
+        this.startTime = date;
     }
 
-    public LocalDateTime getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public void setEndTime(Date date) {
+        this.endTime = date;
     }
 
     public boolean isAllowLateSubmission() {

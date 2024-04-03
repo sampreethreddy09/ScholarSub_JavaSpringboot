@@ -33,7 +33,7 @@ public class FileService {
         this.submissionService = submissionService;
     }
 
-    public String storeFile(MultipartFile file, String a_id) throws IOException {
+    public String storeFile(MultipartFile file, int a_id) throws IOException {
         filesPayloadExists(file);
         validateFileSize(file);
         validateFileExtension(file);
@@ -81,7 +81,7 @@ public class FileService {
         // Store files and create file records
         for (MultipartFile file : files) {
             String fileName = file.getOriginalFilename();
-            String filePath = storeFile(file, a_id);
+            String filePath = storeFile(file, Integer.parseInt(a_id));
             int fileSize = (int) file.getSize(); // Cast the long value to an int
             int fileId = createFileRecord(fileName, filePath, fileSize, file.getContentType());
             submissionService.attachFileToSubmission(submissionId, fileId);
@@ -96,7 +96,7 @@ public class FileService {
     }
 
     // Validate file size
-    private void validateFileSize(MultipartFile file) {
+    public void validateFileSize(MultipartFile file) {
         if (file.getSize() > 5 * 1024 * 1024) {
             throw new IllegalArgumentException("File size exceeds the limit of 5 MB.");
         }
@@ -106,9 +106,9 @@ public class FileService {
 
     // Validate file extension
 
-    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png", ".pdf",".png",".sql",".py",".c" , ".cpp" ,".java",".js" ,".ipynb");
+    public static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png", ".pdf",".png",".sql",".py",".c" , ".cpp" ,".java",".js" ,".ipynb");
 
-    private void validateFileExtension(MultipartFile file) {
+    public void validateFileExtension(MultipartFile file) {
         String filename = file.getOriginalFilename();
         if (filename != null) {
             boolean isValidExtension = ALLOWED_EXTENSIONS.stream().anyMatch(ext -> filename.toLowerCase().endsWith(ext));

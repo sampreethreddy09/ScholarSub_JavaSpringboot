@@ -1,6 +1,8 @@
 package com.demo.model;
 
 import jakarta.persistence.*;
+
+import java.util.Date;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,10 +17,10 @@ public class Assignment {
     private String name;
 
     @Column(name = "start_time")
-    private LocalDateTime startTime;
+    private Date startTime;
 
     @Column(name = "end_time")
-    private LocalDateTime endTime;
+    private Date endTime;
 
     @Column(name = "allow_late_submission")
     private boolean allowLateSubmission;
@@ -50,7 +52,7 @@ public class Assignment {
     public Assignment() {
     }
 
-    public Assignment(int id, String name, LocalDateTime startTime, LocalDateTime endTime, boolean allowLateSubmission,
+    public Assignment(int id, String name, Date startTime, Date endTime, boolean allowLateSubmission,
             boolean scheduleRightNow, Section section, String description, String constraints, boolean inputFilesThere,
             boolean evaluated, int maxMarks) {
         this.id = id;
@@ -85,19 +87,19 @@ public class Assignment {
         this.name = name;
     }
 
-    public LocalDateTime getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
