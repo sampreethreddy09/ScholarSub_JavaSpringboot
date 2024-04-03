@@ -9,5 +9,6 @@ import com.demo.model.Result;
 
 @Repository
 public interface ResultRepository extends JpaRepository<Result, Integer> {
+    
 }
 

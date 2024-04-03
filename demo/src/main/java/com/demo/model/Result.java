@@ -9,73 +9,52 @@ public class Result {
     @Column(name = "sub_id")
     private int submissionId;
 
-    @Column(name = "total_marks", nullable = false)
-    private int totalMarks;
+    @Column(name = "obtained_marks", nullable = false)
+    private int obtainedMarks;
 
-    @Column(name = "obtained_marks")
-    private Integer obtainedMarks;
+    @Column(name = "feedback")
+    private String feedback;
 
     @OneToOne
     @MapsId
     @JoinColumn(name = "sub_id")
     private Submission submission;
 
+    public Result(){
 
-    // constructors
-
-    public Result() {
     }
-
-
-    public Result(int submissionId, int totalMarks, Integer obtainedMarks, Submission submission) {
+    public Result(int submissionId, int obtainedMarks, String feedback, Submission submission) {
         this.submissionId = submissionId;
-        this.totalMarks = totalMarks;
         this.obtainedMarks = obtainedMarks;
+        this.feedback = feedback;
         this.submission = submission;
     }
-
-    // getters and setters
-
     public int getSubmissionId() {
         return submissionId;
     }
-
-
     public void setSubmissionId(int submissionId) {
         this.submissionId = submissionId;
     }
-
-
-    public int getTotalMarks() {
-        return totalMarks;
-    }
-
-
-    public void setTotalMarks(int totalMarks) {
-        this.totalMarks = totalMarks;
-    }
-
-
-    public Integer getObtainedMarks() {
+    public int getObtainedMarks() {
         return obtainedMarks;
     }
-
-
-    public void setObtainedMarks(Integer obtainedMarks) {
+    public void setObtainedMarks(int obtainedMarks) {
         this.obtainedMarks = obtainedMarks;
     }
-
-
+    public String getFeedback() {
+        return feedback;
+    }
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
     public Submission getSubmission() {
         return submission;
     }
-
-
     public void setSubmission(Submission submission) {
         this.submission = submission;
     }
+
+
     
-   
-    
-    
+
 }
