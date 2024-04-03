@@ -1,6 +1,6 @@
 package com.demo.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.*;
 
@@ -13,7 +13,7 @@ public class Submission {
     private int id;
 
     @Column(name = "tos", nullable = false)
-    private LocalDateTime timestamp;
+    private Date tos;
 
     @ManyToOne
     @JoinColumn(name = "a_id")
@@ -28,9 +28,9 @@ public class Submission {
     public Submission() {
     }
 
-    public Submission(int id, LocalDateTime timestamp, Assignment assignment, Student student) {
+    public Submission(int id, Date tos, Assignment assignment, Student student) {
         this.id = id;
-        this.timestamp = timestamp;
+        this.tos = tos;
         this.assignment = assignment;
         this.student = student;
     }
@@ -45,12 +45,12 @@ public class Submission {
         this.id = id;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public Date getTos() {
+        return tos;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setTos(Date tos) {
+        this.tos = tos;
     }
 
     public Assignment getAssignment() {
