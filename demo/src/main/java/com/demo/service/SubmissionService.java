@@ -3,6 +3,7 @@ package com.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.demo.dto.SubmissionDTO;
 import com.demo.model.Assignment;
 import com.demo.model.Fil;
 import com.demo.model.Student;
@@ -13,7 +14,10 @@ import com.demo.repository.FileRepository;
 import com.demo.repository.StudentRepository;
 import com.demo.repository.SubmissionFilesRepository;
 import com.demo.repository.SubmissionRepository;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -63,25 +67,39 @@ public class SubmissionService {
         }
     }
 
- public void attachFileToSubmission(int submissionId, int fileId) {
-        // Fetch the submission and file objects by their IDs
-        Optional<Submission> submissionOptional = submissionRepository.findById(submissionId);
-        Optional<Fil> fileOptional = fileRepository.findById(fileId);
+    public void attachFileToSubmission(int submissionId, int fileId) {
+            // Fetch the submission and file objects by their IDs
+            Optional<Submission> submissionOptional = submissionRepository.findById(submissionId);
+            Optional<Fil> fileOptional = fileRepository.findById(fileId);
 
-        if (submissionOptional.isPresent() && fileOptional.isPresent()) {
-            // Create a new SubmissionFiles object
-            SubmissionFiles submissionFiles = new SubmissionFiles();
-            submissionFiles.setSubmission(submissionOptional.get());
-            submissionFiles.setFile(fileOptional.get());
+            if (submissionOptional.isPresent() && fileOptional.isPresent()) {
+                // Create a new SubmissionFiles object
+                SubmissionFiles submissionFiles = new SubmissionFiles();
+                submissionFiles.setSubmission(submissionOptional.get());
+                submissionFiles.setFile(fileOptional.get());
 
-            // Save the submission-file relationship in the database
-            submissionFilesRepository.save(submissionFiles);
-        } else {
-            // Handle case where submission or file with the given IDs doesn't exist
-            throw new IllegalArgumentException("Submission or File not found");
+                // Save the submission-file relationship in the database
+                submissionFilesRepository.save(submissionFiles);
+            } else {
+                // Handle case where submission or file with the given IDs doesn't exist
+                throw new IllegalArgumentException("Submission or File not found");
+            }
         }
-    }
 
+    public List<SubmissionDTO> getSubmissionsByStudentId(String studentId) {
+        List<Submission> submissions = submissionRepository.findByStudentId(studentId);
+        List<SubmissionDTO> submissionDTOs = new ArrayList<>();
+
+        for (Submission submission : submissions) {
+            SubmissionDTO dto = new SubmissionDTO();
+            dto.setId(submission.getId());
+            dto.setTos(submission.getTos());
+            dto.setAssignmentId(submission.getAssignment().getId()); // Assuming you want to include assignment ID
+            submissionDTOs.add(dto);
+        }
+
+        return submissionDTOs;
+    }
 
     
 }

@@ -11,8 +11,6 @@ export default function Login() {
     role: -1,
   });
 
-  const [message, setMessage] = useState("");
-
   function handleChange(event) {
     const name = event.target.name;
     const value =
@@ -85,12 +83,12 @@ export default function Login() {
             </button>
           </div>
           <div className="uname_pswd">
-            <h3 className="sidetitle">Username</h3>
+            <h3 className="sidetitle">Username ( SRN / TRN )</h3>
             <input
               type="text"
               className="inputs"
               name="uname"
-              placeholder="PES1UGxxyyzzz@pesu.pes.edu"
+              placeholder="PES1UGxxyyzzz"
               onChange={handleChange}
             />
 

@@ -1,47 +1,30 @@
 package com.demo.service;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.demo.dto.AssignmentDTO;
 import com.demo.dto.AssignmentDetailsDTO;
-import com.demo.dto.CreateAssignmentDTO;
 import com.demo.dto.FileDTO;
 import com.demo.model.Assignment;
 import com.demo.model.AssignmentFiles;
 import com.demo.model.Fil;
-import com.demo.model.Submission;
-import com.demo.model.SubmissionFiles;
 import com.demo.repository.AssignmentFilesRepository;
 import com.demo.repository.AssignmentRepository;
 import com.demo.repository.FileRepository;
 import com.demo.repository.SectionRepository;
 import com.demo.repository.SectionStudentRepository;
 
-import com.demo.service.FileService;
-
-import org.apache.commons.lang3.StringUtils;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.Path;
 import jakarta.transaction.Transactional;
-
-import java.io.File;
 import java.io.IOException;
 
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Paths;
-// import java.nio.file.Path;
-
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -54,9 +37,6 @@ public class AssignmentService {
     private final FileRepository fileRepository;
 
     private final FileService fileService;
-
-  
-
     
     public AssignmentService(AssignmentRepository assignmentRepository, SectionStudentRepository sectionStudentRepository, AssignmentFilesRepository assignmentFilesRepository,
     FileRepository fileRepository, SectionRepository sectionRepository,FileService fileService) {
@@ -70,7 +50,7 @@ public class AssignmentService {
 
     public List<Assignment> loadLiveAssignmentsByTeacher(String teacherId) {
         List<String> sectionIds = sectionRepository.findSectionIdsByTeacherId(teacherId);
-        Date currentTime = new Date(0);
+        Date currentTime = new Date();
         return assignmentRepository.findBySectionIdIn(sectionIds)
                 .stream()
                 .filter(assignment -> assignment.getEndTime().after(currentTime))
@@ -78,7 +58,25 @@ public class AssignmentService {
     }
     public List<Assignment> loadPastAssignmentsByTeacher(String teacherId) {
         List<String> sectionIds = sectionRepository.findSectionIdsByTeacherId(teacherId);
-        Date currentTime = new Date(0);
+        Date currentTime = new Date();
+        return assignmentRepository.findBySectionIdIn(sectionIds)
+                .stream()
+                .filter(assignment -> assignment.getEndTime().before(currentTime))
+                .collect(Collectors.toList());
+    }
+
+    public List<Assignment> loadLiveAssignments(String studentId) {
+        List<String> sectionIds = sectionStudentRepository.findSectionIdsByStudentId(studentId);
+        Date currentTime = new Date();
+        return assignmentRepository.findBySectionIdIn(sectionIds)
+                .stream()
+                .filter(assignment -> assignment.getEndTime().after(currentTime))
+                .collect(Collectors.toList());
+    }
+
+    public List<Assignment> loadPastAssignments(String studentId) {
+        List<String> sectionIds = sectionStudentRepository.findSectionIdsByStudentId(studentId);
+        Date currentTime = new Date();
         return assignmentRepository.findBySectionIdIn(sectionIds)
                 .stream()
                 .filter(assignment -> assignment.getEndTime().before(currentTime))
@@ -133,24 +131,6 @@ public class AssignmentService {
         assignmentDetailsDTO.setFiles(fileDTOs);
 
         return assignmentDetailsDTO;
-    }
-
-    public List<Assignment> loadLiveAssignments(String studentId) {
-        List<String> sectionIds = sectionStudentRepository.findSectionIdsByStudentId(studentId);
-        Date currentTime = new Date(0);
-        return assignmentRepository.findBySectionIdIn(sectionIds)
-                .stream()
-                .filter(assignment -> assignment.getEndTime().after(currentTime))
-                .collect(Collectors.toList());
-    }
-
-    public List<Assignment> loadPastAssignments(String studentId) {
-        List<String> sectionIds = sectionStudentRepository.findSectionIdsByStudentId(studentId);
-        Date currentTime = new Date(0);
-        return assignmentRepository.findBySectionIdIn(sectionIds)
-                .stream()
-                .filter(assignment -> assignment.getEndTime().before(currentTime))
-                .collect(Collectors.toList());
     }
 
 

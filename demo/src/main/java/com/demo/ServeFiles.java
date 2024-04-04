@@ -28,8 +28,8 @@ public class ServeFiles implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/plagreport/**")
                 .addResourceLocations("file:Uploaded_Files/");
-        registry.addResourceHandler("/files/**")
-                .addResourceLocations("file:controllers/Uploaded_Files/");
+        registry.addResourceHandler("/uploaded_files/**") // URL pattern to serve the files
+                .addResourceLocations("file:uploaded_files/"); // Directory where the files are located
     }
 
     @GetMapping("/plagreport/{filename}")
@@ -47,7 +47,7 @@ public class ServeFiles implements WebMvcConfigurer {
 
     @GetMapping("/files/{a_id}/{filename}")
     public ResponseEntity<Resource> serveFiles(@PathVariable String a_id, @PathVariable String filename) throws MalformedURLException {
-        Path filePath = Paths.get("controllers", "Uploaded_Files", a_id, filename);
+        Path filePath = Paths.get("Uploaded_Files", a_id, filename);
         Resource resource = new UrlResource(filePath.toUri());
 
         MediaType contentType = MediaType.TEXT_PLAIN;

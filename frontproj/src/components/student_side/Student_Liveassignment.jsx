@@ -57,40 +57,53 @@ export default function Liveassignment(props) {
 
     const [submissionStatus, setSubmissionStatus] = React.useState({});
 
-    const isSubmitted = async (a_id) => {
+    const isSubmitted = async () => {
         try {
-            var res = await fetch(`http://localhost:8080/api/fetchresult/${propsData.uname}/${a_id}`, {
+            // Fetch all submissions for the current student
+            const res = await fetch(`http://localhost:8080/api/student/submissions/${propsData.uname}`, {
                 method: 'GET',
             });
+            const submissions = await res.json();
 
-            var reply = await res.json();
+            console.log("submissions", submissions)
+    
+            // Extract assignment IDs from the fetched submissions
+            const submittedAssignmentIds = submissions.map(submission => submission.assignmentId);
 
-            if (reply && reply.result.length >= 1) {
-                setSubmissionStatus((prevStatus) => ({ ...prevStatus, [a_id]: 1 }));
-            } else if (reply && reply.result.length === 0) {
-                setSubmissionStatus((prevStatus) => ({ ...prevStatus, [a_id]: 0 }));
-            }
+            console.log("submittedAssignmentIds", submittedAssignmentIds)
+    
+            // Update submission status for each assignment
+            const updatedStatus = {};
+            myData.forEach((assignment) => {
+                updatedStatus[assignment.id] = submittedAssignmentIds.includes(assignment.id) ? 1 : 0;
+            });
+
+            console.log("updatedStatus", updatedStatus)
+
+            setSubmissionStatus(updatedStatus);
+
+            
+
         } catch (error) {
             console.error(error);
         }
     };
-
+    
     React.useEffect(() => {
-        myData.forEach((assignment) => {
-            isSubmitted(assignment.id);
-        });
+        isSubmitted();
     }, [myData]);
+    
 
     const alist = myData.map((assignment) => (
         <div key={assignment.id} className="assignment_box">
             <h4 className="details"> {assignment.name}</h4>
             <h4 className="details"> Deadline: {new Date(assignment.endTime).toLocaleString()}</h4>
             <h4 className="assignment_view_box_details" style={{ paddingLeft: "3.6%", paddingBottom: "1.4%" }}>
-                {submissionStatus[assignment.a_id] === 1 ? "Submitted" : "Not Submitted"}
+                {submissionStatus[assignment.id] === 1 ? "Submitted" : "Not Submitted"}
             </h4>
             <Link to={`/student/liveassignment/${propsData.uname}`} state={assignment}>
                 <button className="go_to_assignment">
-                    {submissionStatus[assignment.a_id] === 1 
+                    {submissionStatus[assignment.id] === 1 
                         ? "View Assignment"
                         : "Upload Assignment"}
                 </button>

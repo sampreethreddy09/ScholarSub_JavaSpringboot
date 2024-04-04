@@ -1,6 +1,5 @@
 package com.demo.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,14 +7,23 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+
+import com.demo.dto.SubmissionDTO;
 import com.demo.service.FileService;
+import com.demo.service.SubmissionService;
 
 @RestController
 @RequestMapping("/api/student")
 public class SubmissionController {
 
-    @Autowired
     private FileService fileService;
+    private SubmissionService submissionService;
+
+    public SubmissionController(FileService fileService, SubmissionService submissionService) {
+        this.fileService = fileService;
+        this.submissionService = submissionService;
+    }
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("files") MultipartFile[] files,
@@ -31,5 +39,14 @@ public class SubmissionController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/submissions/{studentId}")
+    public ResponseEntity<List<SubmissionDTO>> getSubmissionsByStudentId(@PathVariable("studentId") String studentId) {
+        List<SubmissionDTO> submissions = submissionService.getSubmissionsByStudentId(studentId);
+        if (submissions.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(submissions, HttpStatus.OK);
     }
 }

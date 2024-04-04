@@ -1,9 +1,7 @@
 import React from "react"
-import ReactDOM from 'react-dom/client';
 import Lottie from 'react-lottie';
 import assignment_logo from "../images/assignment.json"
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
-import Login from "./Login";
+import { Link} from 'react-router-dom';
 
 export default function GetStarted(){
 
@@ -20,10 +18,10 @@ export default function GetStarted(){
         <div className="getstarted_page">
             <div className="info">
                 <h1 className="Title">ScholarSub</h1>
-                <h1 className="SubTitle"> Submissons made easy. It's a website which helps both the teachers and 
-                    students in posting assignments and submitting the assignments. 
+                <h1 className="SubTitle"> Assignment Submissons made easy! We are the platform which facilitates teachers with creating and evaluating assignments and 
+                    students in submitting the assignments and viewing the results 
                 </h1>
-                <Link to="/login"><button type="Submit" className="getstarted_button">Get Started</button></Link>
+                
             </div>
             <div className="animation_logo"> 
                 <Lottie
@@ -32,6 +30,7 @@ export default function GetStarted(){
                     width={500}
                 />
             </div>
+            <Link to="/login"><button type="Submit" className="getstarted_button">Get Started</button></Link>
 
         </div>
     )

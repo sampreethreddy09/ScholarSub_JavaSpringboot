@@ -3,7 +3,6 @@ package com.demo.model;
 import jakarta.persistence.*;
 
 import java.util.Date;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Assignment")

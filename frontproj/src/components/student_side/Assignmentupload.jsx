@@ -1,65 +1,59 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import Submission from "../../documents/submission.pdf"
-import axios from "axios";
 
 
 export default function Assignmentupload() {
 
     const location = useLocation();
     const propsData = location.state;
-    // console.log("props",propsData)
+
     let { s_id } = useParams();
-    // console.log("s_id",s_id)
 
-    const [aDetails, setADetails] = React.useState([])
-    const [filename, setFilename] = React.useState("")
-
-    const [file, setFile] = React.useState(null);
-    // console.log(file)
+    const [filename, setFilename] = useState("")
+    const [file, setFile] = useState(null);
+    const [codeContent, setCodeContent] = useState('');
+    const [isS, setIsS] = useState(false);
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
         setFile(selectedFile);
     };
 
-    const getAssignmentDetails = async () => {
-        var res = await fetch(`http://localhost:8000/student/assignments/${propsData.a_id}`, {
-            method: "GET"
-        })
-        var reply = await res.json()
-        // console.log("reply is", reply)
-        if (reply) {
-            setADetails(reply.assignment)
-            if (reply.files) {
-                setFilename(reply.files[0].name)
+    const getAssignmentFile = async () => {
+        
+            var res = await fetch(`http://localhost:8080/api/assignment/files/${propsData.id}`, {
+                method: "GET"
+            })
+            var reply = await res.json()
+
+            if (reply) {
+                    setFilename(reply[0].name)
+                    console.log("filename", reply[0].name)
             }
-        }
-        else if (reply.error) {
-            console.log(error)
-        }
+            else if (reply.error) {
+                console.log(error)
+            }
     }
 
-    React.useEffect(() => {
-        getAssignmentDetails()
-    }, [])
-
-    const [subStatus, setSubStatus] = React.useState(false)
-
     const handleSubmit = async () => {
+
         if (isS) {
             alert("You have already submitted the assignment");
             return;
         }
+
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("files", file);
         formData.append("s_id", s_id);
-        for (const key in propsData) {
-            formData.append(key, propsData[key]);
-        }
+        formData.append("a_id", propsData.id);
+        formData.append("end_time", propsData.endTime);
+        formData.append("allow_late_submission", propsData.allowLateSubmission);
 
+        // for (const key in propsData) {
+        //     formData.append(key, propsData[key]);
+        // }
 
-        fetch("http://localhost:8000/student/upload", {
+        fetch("http://localhost:8080/api/student/upload", {
             method: "POST",
             body: formData,
             // headers: {
@@ -67,15 +61,15 @@ export default function Assignmentupload() {
             // }
 
         })
-        .then(response => {
-            if (!response.ok) {
-                if(response.status === 410){
-                    alert("Deadline has passed , you cannot submit now")
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 410) {
+                        alert("Deadline has passed , you cannot submit now")
+                    }
+                    throw new Error(`Error! : ${response.message}`);
                 }
-                throw new Error(`Error! : ${response.message}`);
-            }
-            return response.json();
-          })
+                return response.text();
+            })
             .then((data) => {
                 alert("Submission made successfully");
                 setSubStatus(true)
@@ -85,25 +79,6 @@ export default function Assignmentupload() {
                 // Handle the error
             });
     }
-
-    // console.log("state", aDetails)
-
-    const [codeContent, setCodeContent] = useState('');
-
-    React.useEffect(() => {
-        // Adjust the URL based on your Express server and file path
-        const fileUrl = `http://localhost:8000/file-content/${filename}`;
-
-        // Fetch the content of the code file
-        fetch(fileUrl)
-            .then((response) => response.text())
-            .then((data) => {
-                setCodeContent(data);
-            })
-            .catch((error) => {
-                console.error('Error fetching file content:', error);
-            });
-    }, [filename]);
 
     const handleDownload = () => {
         const blob = new Blob([codeContent], { type: 'text/plain' });
@@ -125,53 +100,50 @@ export default function Assignmentupload() {
         var extension = parts[parts.length - 1];
 
         return extension;
-    }
-    var fileExtension = extractExtension(filename);
-
-    //   useEffect(()=>{
-    //     const isSubmitted = async () => {
-    //         var res = await fetch(`http://localhost:8000/student/assignments/${propsData.a_id}`, {
-    //             method: "GET"
-    //         })
-    //         var reply = await res.json()
-    //         console.log("reply is", reply)
-    //         if (reply) {
-    //             setADetails(reply.assignment)
-    //             if(reply.files){
-    //                 setFilename(reply.files[0].name)
-    //             }
-    //         }
-    //         else if (reply.error) {
-    //             console.log(error)
-    //         }
-    //     }
-
-    //     isSubmitted();
-    //   })
-    const [isS, setIsS] = React.useState(false)
+    }    
 
     const isSubmitted = async () => {
-        var res = await fetch(`http://localhost:8000/student/fetchresult/${s_id}/${propsData.a_id}`, {
-            method: 'GET',
+        try {
+            const res = await fetch(`http://localhost:8080/api/student/submissions/${s_id}`, {
+                method: 'GET',
+            });
+            const reply = await res.json();
+            console.log("isS is", reply);
 
-        })
-        var reply = await res.json()
-        console.log("isS is", reply.result)
-        if (reply) {
-            if (reply.result.length >= 1) setIsS(1)
-            else if (reply.result.length == 0) setIsS(0);
+            // Check if there is a submission for the current assignment ID
+            setIsS(reply.some(submission => submission.assignmentId === propsData.id));
+        } catch (error) {
+            console.error(error);
         }
-        else if (reply.error) {
-            console.log(error)
-        }
-    }
-    console.log("isS", isS)
+    };
 
-    React.useEffect(() => {
+    var fileExtension = extractExtension(filename);
+
+    useEffect(() => {
+        if(propsData.inputFilesThere){
+            getAssignmentFile()
+        }
+    }, [propsData])
+
+    useEffect(() => {
+        if (filename === "") return;
+        // Adjust the URL based on your Express server and file path
+        const fileUrl = `http://localhost:8080/file-content/${propsData.id}/${filename}`;
+
+        // Fetch the content of the code file
+        fetch(fileUrl)
+            .then((response) => response.text())
+            .then((data) => {
+                setCodeContent(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching file content:', error);
+            });
+    }, [filename]);
+
+    useEffect(() => {
         isSubmitted();
-    }, [])
-
-    console.log("file name", filename)
+    }, []);
 
     return (
         <div className="past_page">
@@ -187,10 +159,9 @@ export default function Assignmentupload() {
                 ""
             }
 
-
             <div>
                 <h3 className="h3_past_assignments">Description :</h3>
-                <h5 className="assignment_view_page_h5">{aDetails.description}</h5>
+                <h5 className="assignment_view_page_h5">{propsData.description}</h5>
                 {(filename !== "") && <>
 
                     {(fileExtension !== "pdf") ?
@@ -235,7 +206,7 @@ export default function Assignmentupload() {
                         <div>    <h3 className="h3_past_assignments">Manual :</h3>
                             <iframe
                                 title="File Viewer"
-                                src={`http://localhost:8000/files/${filename}`}
+                                src={`http://localhost:8080/files/${propsData.id}/${filename}`}
                                 width="800"
                                 height="400"
                             ></iframe>
@@ -248,9 +219,9 @@ export default function Assignmentupload() {
 
 
                 <h3 className="h3_past_assignments">Upload Submission</h3>
-                <h3 className="assignment_view_page_h5">Constraints : {aDetails.constraints}</h3>
+                <h3 className="assignment_view_page_h5">Constraints : {propsData.constraints}</h3>
                 <input type="file" className="choose_upload_assignment" onChange={handleFileChange}></input> <br></br>
-                <button type="Submit" className="upload_assignment" disabled={subStatus}  onClick={handleSubmit}> Upload</button>
+                <button type="Submit" className="upload_assignment" onClick={handleSubmit}> Upload</button>
             </div>
 
 

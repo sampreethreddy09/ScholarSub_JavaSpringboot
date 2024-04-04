@@ -1,11 +1,12 @@
 package com.demo.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+
 
 public class ResultDTO {
 
     private int submissionId;
-    private LocalDateTime tos;
+    private Date tos;
     private int assignmentId;
     private String studentId;
     private int obtainedMarks;
@@ -16,7 +17,7 @@ public class ResultDTO {
 
     public ResultDTO() {}
 
-    public ResultDTO(int submissionId, LocalDateTime tos, int assignmentId, String studentId, int obtainedMarks, String feedback, int maxMarks) {
+    public ResultDTO(int submissionId, Date tos, int assignmentId, String studentId, int obtainedMarks, String feedback, int maxMarks) {
         this.submissionId = submissionId;
         this.tos = tos;
         this.assignmentId = assignmentId;
@@ -36,11 +37,11 @@ public class ResultDTO {
         this.submissionId = submissionId;
     }
 
-    public LocalDateTime getTos() {
+    public Date getTos() {
         return tos;
     }
 
-    public void setTos(LocalDateTime tos) {
+    public void setTos(Date tos) {
         this.tos = tos;
     }
 

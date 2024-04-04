@@ -16,7 +16,7 @@ export default function Submission_View_Student() {
 
     const fetchResult = async () => {
         try {
-            var res = await fetch(`http://localhost:8000/student/fetchresult/${s_id}/${propsData.a_id}`, {
+            var res = await fetch(`http://localhost:8080/api/student/fetchresult/${s_id}/${propsData.a_id}`, {
                 method: "GET",
                 // headers: {
                 //     'Content-Type': 'application/json', // Set the content type to JSON

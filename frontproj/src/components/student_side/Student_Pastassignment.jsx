@@ -17,12 +17,9 @@ export default function Student_Pastassignment(){
     // ]
 
     const fetchPastAssignments = async () =>{
-        console.log("inside annyname")
         try {
-            console.log("im here")
-
             const studentId = propsData.uname; // Assuming the student ID is in propsData
-            const url = `http://localhost:8000/student/pastassignments/${studentId}`;
+            const url = `http://localhost:8080/api/assignments/past/${studentId}`;
 
             var res = await fetch(url, {
             method: "GET",
@@ -35,8 +32,7 @@ export default function Student_Pastassignment(){
         // console.log(reply)
 
         if (res.status === 200) {
-            setMyData(reply.pastAssignments); // Update the state with the fetched data
-            console.log(reply.pastAssignments);
+            setMyData(reply); // Update the state with the fetched data
           } else if (reply.error) {
             alert(reply.error);
           }
@@ -47,45 +43,46 @@ export default function Student_Pastassignment(){
     }
 
     React.useEffect(()=>{
-        console.log("inside")
         fetchPastAssignments();
     },[])
 
     const [submissionStatus, setSubmissionStatus] = React.useState({});
 
-    const isSubmitted = async (a_id) => {
+    const isSubmitted = async () => {
         try {
-            var res = await fetch(`http://localhost:8000/student/fetchresult/${propsData.uname}/${a_id}`, {
+            // Fetch all submissions for the current student
+            const res = await fetch(`http://localhost:8080/api/student/submissions/${propsData.uname}`, {
                 method: 'GET',
             });
-
-            var reply = await res.json();
-
-            if (reply && reply.result.length >= 1) {
-                setSubmissionStatus((prevStatus) => ({ ...prevStatus, [a_id]: 1 }));
-            } else if (reply && reply.result.length === 0) {
-                setSubmissionStatus((prevStatus) => ({ ...prevStatus, [a_id]: 0 }));
-            }
+            const submissions = await res.json();
+    
+            // Extract assignment IDs from the fetched submissions
+            const submittedAssignmentIds = submissions.map(submission => submission.assignmentId);
+    
+            // Update submission status for each assignment
+            const updatedStatus = {};
+            myData.forEach((assignment) => {
+                updatedStatus[assignment.id] = submittedAssignmentIds.includes(assignment.id) ? 1 : 0;
+            });
+            setSubmissionStatus(updatedStatus);
         } catch (error) {
             console.error(error);
         }
     };
-
+    
     React.useEffect(() => {
-        myData.forEach((assignment) => {
-            isSubmitted(assignment.a_id);
-        });
+        isSubmitted();
     }, [myData]);
     
     const alist = myData.map((assignment)=>(
-        <div key={assignment.a_id} className="assignment_box">
+        <div key={assignment.id} className="assignment_box">
             <h4 className="details"> {assignment.name}</h4>
-            <h4 className="details"> Ended at : {new Date(assignment.end_time).toLocaleString()}</h4>
+            <h4 className="details"> Ended at : {new Date(assignment.endTime).toLocaleString()}</h4>
             <h4 className="assignment_view_box_details" style={{ paddingLeft: "3.6%", paddingBottom: "1.4%" }}>
-                {submissionStatus[assignment.a_id] === 1 ? "Submitted" : "Not Submitted"}
+                {submissionStatus[assignment.id] === 1 ? "Submitted" : "Not Submitted"}
             </h4>
             <Link to={`/student/pastassignment/${propsData.uname}`} state={assignment}>
-            <button className="go_to_assignment">Go to the assignment</button>
+            <button className="go_to_assignment">View Assignment</button>
             </Link>
         </div>
     ))

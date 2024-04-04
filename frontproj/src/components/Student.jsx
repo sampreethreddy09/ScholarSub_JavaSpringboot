@@ -27,7 +27,7 @@ export default function Student(props){
         <div className="student_outer">
             <div className="student">
                 <h1 className="Title">ScholarSub</h1>   
-                <h2>Hello, {propsData.uname}</h2>
+                <h2><span className="hello">👋</span>Hello {propsData.uname}</h2>
             </div>
             <div className="teacher_operations">
                 <Link to="/student/liveassignment" state={propsData}> 
