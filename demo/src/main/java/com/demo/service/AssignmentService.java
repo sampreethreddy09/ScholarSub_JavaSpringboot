@@ -1,24 +1,48 @@
 package com.demo.service;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.demo.dto.AssignmentDTO;
 import com.demo.dto.AssignmentDetailsDTO;
+import com.demo.dto.CreateAssignmentDTO;
 import com.demo.dto.FileDTO;
 import com.demo.model.Assignment;
 import com.demo.model.AssignmentFiles;
 import com.demo.model.Fil;
+import com.demo.model.Submission;
+import com.demo.model.SubmissionFiles;
 import com.demo.repository.AssignmentFilesRepository;
 import com.demo.repository.AssignmentRepository;
 import com.demo.repository.FileRepository;
 import com.demo.repository.SectionRepository;
 import com.demo.repository.SectionStudentRepository;
 
+import com.demo.service.FileService;
+
+import org.apache.commons.lang3.StringUtils;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Path;
+import jakarta.transaction.Transactional;
+
+import java.io.File;
+import java.io.IOException;
+
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Paths;
+// import java.nio.file.Path;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AssignmentService {
@@ -29,32 +53,35 @@ public class AssignmentService {
     private final AssignmentFilesRepository assignmentFilesRepository;
     private final FileRepository fileRepository;
 
+    private final FileService fileService;
+
   
 
     
     public AssignmentService(AssignmentRepository assignmentRepository, SectionStudentRepository sectionStudentRepository, AssignmentFilesRepository assignmentFilesRepository,
-    FileRepository fileRepository, SectionRepository sectionRepository) {
+    FileRepository fileRepository, SectionRepository sectionRepository,FileService fileService) {
         this.assignmentRepository = assignmentRepository;
         this.sectionStudentRepository = sectionStudentRepository;
         this.assignmentFilesRepository = assignmentFilesRepository;
         this.fileRepository = fileRepository;
         this.sectionRepository = sectionRepository;
+        this.fileService = fileService;
     }
 
     public List<Assignment> loadLiveAssignmentsByTeacher(String teacherId) {
         List<String> sectionIds = sectionRepository.findSectionIdsByTeacherId(teacherId);
-        LocalDateTime currentTime = LocalDateTime.now();
+        Date currentTime = new Date(0);
         return assignmentRepository.findBySectionIdIn(sectionIds)
                 .stream()
-                .filter(assignment -> assignment.getEndTime().isAfter(currentTime))
+                .filter(assignment -> assignment.getEndTime().after(currentTime))
                 .collect(Collectors.toList());
     }
     public List<Assignment> loadPastAssignmentsByTeacher(String teacherId) {
         List<String> sectionIds = sectionRepository.findSectionIdsByTeacherId(teacherId);
-        LocalDateTime currentTime = LocalDateTime.now();
+        Date currentTime = new Date(0);
         return assignmentRepository.findBySectionIdIn(sectionIds)
                 .stream()
-                .filter(assignment -> assignment.getEndTime().isBefore(currentTime))
+                .filter(assignment -> assignment.getEndTime().before(currentTime))
                 .collect(Collectors.toList());
     }
 
@@ -110,22 +137,147 @@ public class AssignmentService {
 
     public List<Assignment> loadLiveAssignments(String studentId) {
         List<String> sectionIds = sectionStudentRepository.findSectionIdsByStudentId(studentId);
-        LocalDateTime currentTime = LocalDateTime.now();
+        Date currentTime = new Date(0);
         return assignmentRepository.findBySectionIdIn(sectionIds)
                 .stream()
-                .filter(assignment -> assignment.getEndTime().isAfter(currentTime))
+                .filter(assignment -> assignment.getEndTime().after(currentTime))
                 .collect(Collectors.toList());
     }
 
     public List<Assignment> loadPastAssignments(String studentId) {
         List<String> sectionIds = sectionStudentRepository.findSectionIdsByStudentId(studentId);
-        LocalDateTime currentTime = LocalDateTime.now();
+        Date currentTime = new Date(0);
         return assignmentRepository.findBySectionIdIn(sectionIds)
                 .stream()
-                .filter(assignment -> assignment.getEndTime().isBefore(currentTime))
+                .filter(assignment -> assignment.getEndTime().before(currentTime))
                 .collect(Collectors.toList());
     }
 
+
+    @Transactional
+    public ResponseEntity<String> uploadAssignmentWithFile( MultipartFile[] files,
+                                            String aname,
+                                            Date endTime,
+                                            Date startTime,
+                                            boolean allowLateSubmission,
+                                            int maxMarks,
+                                            String description,
+                                            String constraints,
+                                            String selectedOption,
+                                            boolean isRytNow,
+                                            boolean isInput) {
+
+    try {
+        MultipartFile file;
+        file = files[0];
+        
+        if(isInput){
+            if (files == null || files.length == 0 || files[0] == null || files[0].isEmpty()) {
+                return ResponseEntity.badRequest().body("No file uploaded.");
+            }                                     
+            file = files[0];
+            fileService.validateFileExtension(file);
+            fileService.validateFileSize(file);
+        }
+
+        
+
+
+        // // Handle file upload and record creation
+        // String fileName = Paths.get(file.getOriginalFilename()).normalize().toString();
+        // // Path uploadPath = (Path) Paths.get("Uploaded_Files").toAbsolutePath().normalize();
+        // String destinationDirectory = "D://Sem-6//ScholarSub_Springboot/uploads/";
+        // File destinationFile = new File(destinationDirectory + fileName);
     
+        // file.transferTo(destinationFile);
+
+        // if (!Files.exists(uploadPath, LinkOption.NOFOLLOW_LINKS)) {
+        //     Files.createDirectories(uploadPath);
+        // }
+        // Path filePath = uploadPath.resolve(fileName);
+        // Files.copy(file.getInputStream(), filePath);
+
+
+        // Create assignment record
+        Assignment assignment = new Assignment();
+        assignment.setName(aname);
+
+        // Determine the start time based on the provided logic
+        if (isRytNow) {
+            assignment.setStartTime(new Date(0)); // Set start time to current time
+        } else {
+            // Assuming the format of endTime is "yyyy-MM-dd'T'HH:mm:ss"
+            Date specifiedStartTime = startTime;
+            assignment.setStartTime(specifiedStartTime);
+        }
+
+        assignment.setEndTime(endTime); // Assuming end time is in a parseable format
+        assignment.setAllowLateSubmission(allowLateSubmission);
+        assignment.setScheduleRightNow(isRytNow);
+        assignment.setSection(sectionRepository.findById(selectedOption).orElseThrow(() -> new EntityNotFoundException("Section not found")));
+        assignment.setDescription(description);
+        assignment.setConstraints(constraints);
+        assignment.setInputFilesThere(isInput);
+        assignment.setMaxMarks(maxMarks);
+
+        // Save assignment record
+        Assignment savedAssignment = assignmentRepository.save(assignment);
+
+        int a_id = savedAssignment.getId();
+
+        if(isInput)
+        {
+            //create file record
+            String fileName = file.getOriginalFilename();
+            String filePath = fileService.storeFile(file, a_id);
+            int fileSize = (int) file.getSize(); // Cast the long value to an int
+            int fileId = fileService.createFileRecord(fileName, filePath, fileSize, file.getContentType());
+
+            attachFileToAssignment(a_id, fileId);
+        }
+        
+        
+        // // Create file record
+        // Fil fileEntity = new Fil();
+        // fileEntity.setName(fileName);
+        // fileEntity.setType(file.getContentType());
+        // int fileSize = (int) file.getSize();
+        // fileEntity.setSize(fileSize);
+        // fileEntity.setPath(destinationFile.toString());
+
+        // Fil savedFile = fileRepository.save(fileEntity);
+
+        // Associate the saved file with the assignment
+        // AssignmentFiles assignmentFiles = new AssignmentFiles();
+        // assignmentFiles.setAssignment(assignment);
+        // assignmentFiles.setFile(savedFile);
+        // assignmentFilesRepository.save(assignmentFiles);
+
+        return ResponseEntity.ok("Assignment created successfully.");
+    } catch (IOException e) {
+        e.printStackTrace(); // Handle or log the exception appropriately
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file.");
+    }
+}
+
+    public void attachFileToAssignment(int assignmentId, int fileId) {
+        // Fetch the submission and file objects by their IDs
+        Optional<Assignment> assignmentOptional = assignmentRepository.findById(assignmentId);
+        Optional<Fil> fileOptional = fileRepository.findById(fileId);
+
+        if (assignmentOptional.isPresent() && fileOptional.isPresent()) {
+            // Create a new SubmissionFiles object
+            AssignmentFiles assignmentFiles = new AssignmentFiles();
+            assignmentFiles.setAssignment(assignmentOptional.get());
+            assignmentFiles.setFile(fileOptional.get());
+
+            // Save the submission-file relationship in the database
+            assignmentFilesRepository.save(assignmentFiles);
+        } else {
+            // Handle case where submission or file with the given IDs doesn't exist
+            throw new IllegalArgumentException("Assignment or File not found");
+        }
+    }
+
 }
 
