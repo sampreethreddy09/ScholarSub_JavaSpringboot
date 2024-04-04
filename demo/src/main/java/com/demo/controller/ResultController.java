@@ -11,7 +11,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.dto.EvaluateSubmissionDTO;
 import com.demo.dto.ResultDTO;
-import com.demo.model.Result;
 import com.demo.service.ResultService;
 
 import java.util.List;
@@ -36,9 +35,9 @@ public class ResultController {
         }
     }
 
-    @GetMapping("/api/fetchresult/{sId}/{aId}")
-    public ResponseEntity<List<ResultDTO>> fetchResult(@PathVariable("sId") int sId, @PathVariable("aId") int aId) {
-        List<ResultDTO> result = resultService.fetchResult(sId, aId);
+    @GetMapping("/fetchresult/{sId}/{aId}")
+    public ResponseEntity<List<ResultDTO>> fetchResult(@PathVariable("sId") String sId, @PathVariable("aId") String aId) {
+        List<ResultDTO> result = resultService.fetchResult(sId, Integer.parseInt(aId));
         if (result.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

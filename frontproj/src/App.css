@@ -1,0 +1,415 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200;400&family=Young+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Roboto+Mono:wght@200;400&family=Young+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color:#4852B7;
+    color: white;
+}
+
+
+/* Get Started Page CSS */
+
+.getstarted_page{
+    margin: 2rem;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden; 
+}
+
+.info{
+    align-items: center;
+    width:75%;
+    color:white;
+    float:left; 
+}
+
+.Title{
+    font-family: "Young Serif";
+    color: white;
+    margin-bottom: 1rem;
+    flex: 1;
+}
+
+.SubTitle{
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.6rem;
+    font-weight: 400;
+}
+
+.getstarted_button{
+    color: #4852B7   ;
+    background-color: white;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 20px;
+    padding: 10px 60px;
+    border-radius: 10px;
+    margin: 10px 0px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #4852B7;
+    border: 2px white;
+}
+
+.animation_logo{
+    position: Absolute; 
+    top: 15%; 
+    right : 0%;
+    z-index: 1;
+}
+
+ /* Teacher , Student Page CSS */
+
+ .student_outer{
+    margin: 2rem;
+ }
+
+.teacher, .student{
+    padding-left: 2%;
+    padding-top: 0.1%;
+
+    display: flex;
+}
+
+.uname{
+    font-family: 'Roboto Mono', monospace;
+    position: Absolute; 
+    right: 6%;
+    flex: 1;
+}
+
+.teacher_operations{
+    width: 20%;
+    display: block;
+    
+    
+}
+
+.teacher_operation_buttons{
+    margin-left: 8%;
+    padding: 10px 44px;
+    border: none;
+    color: #4852B7 ;
+    font-size: 20px;
+    background-color: white;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 20px;
+    color: #4852B7;
+    border-radius: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 40px;
+}
+
+.workspace_outer{
+    display: flex;
+    
+}
+
+.workspace{
+    width: 80%;
+}
+
+.post_page{
+    font-family: 'Poppins', sans-serif;
+    padding: 1% 4% ;
+    font-size: 160%;
+}
+
+.h3_post_assignment{
+    margin-bottom: 1%;
+    margin-top: 3%  ;
+}
+
+.add_file_button{
+    margin-bottom: 2%;
+    padding: 10px 44px;
+    border: none;
+    color: #4852B7 ;
+    font-size: 20px;
+    background-color: white;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 20px;
+    color: #4852B7;
+    border-radius: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 40px;
+}
+
+/* */
+
+.past_page{
+    padding: 1% 4% ;
+}
+
+.root_past_assignments{
+    align-items: center;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.assignment_box{
+    margin: 10px;
+    border: solid 3px white;
+    border-radius: 6%;
+    width: 30%;
+    font-family: 'Montserrat', sans-serif;
+    background-color: white;
+    color: #4852B7;
+}
+
+.h3_past_assignments{
+    font-family: 'Poppins', sans-serif;
+    font-size: 180%;
+    margin-bottom: 3%;
+    margin-top: 3%  ;
+}
+
+.details{
+    margin-left: 3%;
+    font-size: 120%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    color: black ;
+}
+
+.go_to_assignment{
+    
+    margin-left: 3%;
+    margin-bottom: 2%;
+    padding: 10px 8px;
+    border: none;
+    color: white ;
+    font-size: 20px;
+    background-color: #7f88ec;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.delete_assignment{
+    margin-left: 3%;
+    margin-bottom: 2%;
+    padding: 10px 8px;
+    border: none;
+    color: white ;
+    font-size: 20px;
+    background-color: rgb(240, 131, 131);
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+/* */
+
+
+.assignment_view_page{
+    padding: 1% 4% ;
+}
+
+.assignment_view_page_h3{
+    font-family: 'Poppins', sans-serif;
+    font-size: 180%;
+    margin-bottom: 3%;
+    margin-top: 3%  ;
+}
+
+.assignment_view_page_h5{
+    font-family: 'Poppins', sans-serif;
+    font-size: 120%;
+    margin-bottom: 3%;
+    margin-top: 3%  ;
+}
+
+.assignment_view_box{
+    margin: 10px;
+    border: solid 3px white;
+    border-radius: 4%;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    background-color: white;
+    color: black;
+    height: 10%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.assignment_view_box_details{
+    margin-top: 1%;
+    margin-bottom: 1%;
+    font-size: 120%;   
+}
+
+.go_to_submission{
+    margin: 1%;
+    padding: 10px 8px;
+    border: none;
+    color: white ;
+    font-size: 20px;
+    background-color: #4852B7;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+/* */
+
+.submission_view_page{
+    padding: 1% 4% ;
+}
+
+.submission_view_page_h3{
+    font-family: 'Poppins', sans-serif;
+    font-size: 180%;
+    margin-bottom: 1%;
+    margin-top: 3%  ;
+}
+
+.submission_view_page_h5{
+    font-family: 'Poppins', sans-serif;
+    font-size: 120%;
+    margin-bottom: 2%;
+    margin-top: 2%  ;
+}
+
+.input_marks{
+    width: 12%;
+    border: 2px black;
+    border-radius: 4px;
+    padding: 12px;
+}
+
+.input_feedback{
+    /* width: 30%;
+    height: 20%; */
+    border: 2px black;
+    border-radius: 4px;
+    padding: 12px;
+}
+
+.input_teacher_form{
+    padding: 10px 44px;
+    border: none;
+    color: #4852B7 ;
+    font-size: 20px;
+    background-color: white;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 20px;
+    color: #4852B7;
+    border-radius: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 2.5%;
+}
+
+/* */
+
+.iframe_document{
+    height: 400px;
+    width : 1000px;
+    overflow: visible;
+}
+
+.upload_assignment{  
+    padding: 10px 44px;
+    border: none;
+    color: #4852B7 ;
+    font-size: 20px;
+    background-color: white;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 20px;
+    color: #4852B7;
+    border-radius: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+.choose_upload_assignment{
+    padding: 4px 4px;
+    border: none;
+    color: #4852B7 ;
+    font-size: 20px;
+    background-color: white;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 15px;
+    color: #4852B7;
+    border-radius: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 6px;
+    width: 24%;
+}
+
+
+.plag_button{
+    padding: 10px 24px;
+    border: none;
+    color: #4852B7 ;
+    font-size: 20px;
+    background-color: white;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 20px;
+    color: #4852B7;
+    border-radius: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+
+
+/* styles.css */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+table th, table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    text-align: center;
+    
+}
+
+table thead tr {
+    background-color: 4852B7;
+}

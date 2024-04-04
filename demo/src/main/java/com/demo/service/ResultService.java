@@ -35,7 +35,7 @@ public class ResultService {
         });
     }
 
-    public List<ResultDTO> fetchResult(int sId, int aId) {
+    public List<ResultDTO> fetchResult(String sId, int aId) {
     List<Object[]> results = resultRepository.fetchResult(sId, aId);
     List<ResultDTO> dtos = new ArrayList<>();
     for (Object[] result : results) {

@@ -1,10 +1,12 @@
 package com.demo.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.model.Fil;
 import com.demo.repository.FileRepository;
@@ -72,7 +74,7 @@ public class FileService {
         
         // Check if deadline has passed and late submission is not allowed
         if (!allow_late_submission && currentTime.after(end_time)) {
-            throw new RuntimeException("Deadline has passed, You can't submit now");
+             throw new ResponseStatusException(HttpStatus.GONE, "Deadline has passed, You can't submit now");
         }
 
         // Create submission
