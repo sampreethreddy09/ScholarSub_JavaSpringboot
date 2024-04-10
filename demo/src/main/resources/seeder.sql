@@ -140,8 +140,8 @@ CREATE TABLE Submission_Files(
 CREATE TABLE `Result` (
 
   `sub_id` INT NOT NULL,
-  `total_marks` INT NOT NULL,
   `obtained_marks` INT DEFAULT NULL,
+  `feedback` VARCHAR(200) DEFAULT NULL,
 
   PRIMARY KEY (`sub_id`),
   KEY `fk_result_submission_id` (`sub_id`),

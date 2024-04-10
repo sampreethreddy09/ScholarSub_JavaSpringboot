@@ -59,8 +59,8 @@ public class ResultService {
   }
 
 
-  public List<Object[]> getAssignmentStats(int assignmentId) {
-    return resultRepository.getAssignmentStats(assignmentId);
-  }
+  // public List<Object[]> getAssignmentStats(int assignmentId) {
+  //   return resultRepository.getAssignmentStats(assignmentId);
+  // }
 
 }
