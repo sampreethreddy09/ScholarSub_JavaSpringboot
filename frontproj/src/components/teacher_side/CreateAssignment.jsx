@@ -28,7 +28,7 @@ export default function CreateAssignment() {
 
 
     const fetchSections = async () => {
-        var res = await fetch(`http://localhost:8000/teacher/section/${propsData.uname}`, {
+        var res = await fetch(`http://localhost:8080/api/sections/${propsData.uname}`, {
             method: "GET",
         })
 
@@ -36,7 +36,7 @@ export default function CreateAssignment() {
         console.log("reply", reply)
 
         if (reply) {
-            setSections(reply.sections)
+            setSections(reply)
         } else if (reply.error) {
             alert(reply.error);
         }
@@ -74,9 +74,9 @@ export default function CreateAssignment() {
         }
     
 
-        console.log("formdata", formData.file)
+        console.log("formdata", formData)
 
-        fetch("http://localhost:8000/teacher/CreateAssignment", {
+        fetch("http://localhost:8080/api/teacher/postassignment", {
             method: "POST",
             body: formData,
             // headers: {
@@ -116,8 +116,8 @@ export default function CreateAssignment() {
             <select name="selectedOption" value={postData.selectedOption} onChange={handleChange}>
                 <option value="select">Select a section</option>
                 {section.map((sectionItem) => (
-                    <option key={sectionItem.sec_id} value={sectionItem.sec_id}>
-                        {sectionItem.name}
+                    <option key={sectionItem.secId} value={sectionItem.secId}>
+                        {sectionItem.secName}
                     </option>
                 ))}
             </select>
@@ -144,7 +144,7 @@ export default function CreateAssignment() {
             <br></br>
 
 
-            <h3 className="h3_post_assignment"> Asignment Description</h3>
+            <h3 className="h3_post_assignment"> Assignment Description</h3>
             <textarea name="description" placeholder="Enter description here" rows={4} cols={50} onChange={handleChange}></textarea>
 
             <h3 className="h3_post_assignment"> Submission Constraints</h3>

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import {  Link  ,useLocation} from 'react-router-dom';
 
 export default function Student_Pastassignment(){
@@ -7,7 +7,7 @@ export default function Student_Pastassignment(){
     const propsData = location.state;
     console.log(propsData)
 
-    const [myData, setMyData] = React.useState([]);
+    const [myData, setMyData] = useState([]);
 
     // var data = [
     //     {id: 1, aname : "Assignemnt-1", created_by : "Prof 1", end_date : 10},
@@ -42,7 +42,7 @@ export default function Student_Pastassignment(){
         }
     }
 
-    React.useEffect(()=>{
+    useEffect(()=>{
         fetchPastAssignments();
     },[])
 

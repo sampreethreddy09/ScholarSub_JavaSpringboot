@@ -168,7 +168,7 @@ public class AssignmentService {
 
         // Determine the start time based on the provided logic
         if (isRytNow) {
-            assignment.setStartTime(new Date(0)); // Set start time to current time
+            assignment.setStartTime(new Date()); // Set start time to current time
         } else {
             // Assuming the format of endTime is "yyyy-MM-dd'T'HH:mm:ss"
             Date specifiedStartTime = startTime;
