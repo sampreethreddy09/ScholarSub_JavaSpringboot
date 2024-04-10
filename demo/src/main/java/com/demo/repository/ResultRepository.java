@@ -36,8 +36,8 @@ public interface ResultRepository extends JpaRepository<Result, Integer> {
         "WHERE s.a_id = :aId AND s.s_id = :sId", nativeQuery = true)
     List<Object[]> fetchResult(String sId, int aId);
 
-    // Define custom method to call stored procedure and fetch assignment stats
-    @Procedure(name = "GetAssignmentStats")
-    List<Object[]> getAssignmentStats(int assignmentId);
+    // // Define custom method to call stored procedure and fetch assignment stats
+    // @Procedure(name = "GetAssignmentStats")
+    // List<Object[]> getAssignmentStats(int assignmentId);
     
 }
