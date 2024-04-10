@@ -101,5 +101,10 @@ public class SubmissionService {
         return submissionDTOs;
     }
 
-    
+    // public SubmissionStatsDto fetchSubmissionStats(int assignmentId) {
+    //     List<Object[]> submissionsWithMarksAndFeedback = submissionRepository.fetchSubmissionsWithMarksAndFeedback(assignmentId);
+    //     Integer submissionCount = submissionRepository.countSubmissionsByAssignmentId(assignmentId);
+
+    //     return new SubmissionStatsDto(submissionCount, submissionsWithMarksAndFeedback);
+    // }
 }

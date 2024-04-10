@@ -49,4 +49,10 @@ public class SubmissionController {
         }
         return new ResponseEntity<>(submissions, HttpStatus.OK);
     }
+
+    // @GetMapping("/submission/fetch/{assignmentId}")
+    // public SubmissionStatsDto fetchSubmissionStats(@PathVariable String assignmentId) {
+    //     return submissionService.fetchSubmissionStats(Integer.parseInt(assignmentId));
+    // }
+
 }

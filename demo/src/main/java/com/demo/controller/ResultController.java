@@ -11,7 +11,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.dto.EvaluateSubmissionDTO;
 import com.demo.dto.ResultDTO;
+import com.demo.model.Student;
 import com.demo.service.ResultService;
+import com.demo.service.StudentService;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,6 +26,12 @@ public class ResultController {
 
     @Autowired
     private ResultService resultService;
+    private StudentService studentService;
+
+    public ResultController(ResultService resultService, StudentService studentService) {
+        this.resultService = resultService;
+        this.studentService = studentService;
+    }
 
     @PutMapping("/teacher/evaluate")
     public ResponseEntity<String> evaluateSubmission(@RequestBody EvaluateSubmissionDTO data){
@@ -43,34 +51,15 @@ public class ResultController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
 
-    // @GetMapping("/fetchresult/{s_id}/{a_id}")
-    // public List<Result> fetchResult(@PathVariable("s_id") String s_id, @PathVariable("a_id") String a_id) {
-    //     return resultService.fetchResult(s_id, a_id);
-    // }
-// import org.springframework.web.bind.annotation.RestController;
+    @GetMapping("/students/notsubmitted/{aId}")
+    public List<Student> getStudentsNotSubmitted(@PathVariable Long aId) {
+        return studentService.getStudentsNotSubmitted(aId);
+    }
 
-// import com.demo.dto.ResultDTO;
-// import com.demo.service.ResultService;
+    @GetMapping("/assignment/stats/{assignmentId}")
+    public List<Object[]> getAssignmentStats(@PathVariable String assignmentId) {
+        return resultService.getAssignmentStats(Integer.parseInt(assignmentId));
+    }
 
-// import java.util.List;
-
-// @RestController
-// public class ResultController {
-
-//     private final ResultService resultService;
-
-//     public ResultController(ResultService resultService) {
-//         this.resultService = resultService;
-//     }
-
-//     @GetMapping("/api/fetchresult/{sId}/{aId}")
-//     public ResponseEntity<List<ResultDTO>> fetchResult(@PathVariable("sId") int sId, @PathVariable("aId") int aId) {
-//         List<ResultDTO> result = resultService.fetchResult(sId, aId);
-//         if (result.isEmpty()) {
-//             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//         }
-//         return new ResponseEntity<>(result, HttpStatus.OK);
-//     }
 }

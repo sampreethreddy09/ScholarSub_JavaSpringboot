@@ -2,6 +2,7 @@ package com.demo.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +35,9 @@ public interface ResultRepository extends JpaRepository<Result, Integer> {
         "JOIN Assignment a ON s.a_id = a.a_id " +
         "WHERE s.a_id = :aId AND s.s_id = :sId", nativeQuery = true)
     List<Object[]> fetchResult(String sId, int aId);
+
+    // Define custom method to call stored procedure and fetch assignment stats
+    @Procedure(name = "GetAssignmentStats")
+    List<Object[]> getAssignmentStats(int assignmentId);
     
 }

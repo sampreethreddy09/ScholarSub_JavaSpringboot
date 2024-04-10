@@ -57,4 +57,10 @@ public class ResultService {
     }
     return dtos;
   }
+
+
+  public List<Object[]> getAssignmentStats(int assignmentId) {
+    return resultRepository.getAssignmentStats(assignmentId);
+  }
+
 }

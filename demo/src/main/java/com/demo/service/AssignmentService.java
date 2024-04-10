@@ -56,6 +56,7 @@ public class AssignmentService {
                 .filter(assignment -> assignment.getEndTime().after(currentTime))
                 .collect(Collectors.toList());
     }
+
     public List<Assignment> loadPastAssignmentsByTeacher(String teacherId) {
         List<String> sectionIds = sectionRepository.findSectionIdsByTeacherId(teacherId);
         Date currentTime = new Date();
@@ -160,23 +161,6 @@ public class AssignmentService {
             fileService.validateFileSize(file);
         }
 
-        
-
-
-        // // Handle file upload and record creation
-        // String fileName = Paths.get(file.getOriginalFilename()).normalize().toString();
-        // // Path uploadPath = (Path) Paths.get("Uploaded_Files").toAbsolutePath().normalize();
-        // String destinationDirectory = "D://Sem-6//ScholarSub_Springboot/uploads/";
-        // File destinationFile = new File(destinationDirectory + fileName);
-    
-        // file.transferTo(destinationFile);
-
-        // if (!Files.exists(uploadPath, LinkOption.NOFOLLOW_LINKS)) {
-        //     Files.createDirectories(uploadPath);
-        // }
-        // Path filePath = uploadPath.resolve(fileName);
-        // Files.copy(file.getInputStream(), filePath);
-
 
         // Create assignment record
         Assignment assignment = new Assignment();
@@ -216,23 +200,6 @@ public class AssignmentService {
             attachFileToAssignment(a_id, fileId);
         }
         
-        
-        // // Create file record
-        // Fil fileEntity = new Fil();
-        // fileEntity.setName(fileName);
-        // fileEntity.setType(file.getContentType());
-        // int fileSize = (int) file.getSize();
-        // fileEntity.setSize(fileSize);
-        // fileEntity.setPath(destinationFile.toString());
-
-        // Fil savedFile = fileRepository.save(fileEntity);
-
-        // Associate the saved file with the assignment
-        // AssignmentFiles assignmentFiles = new AssignmentFiles();
-        // assignmentFiles.setAssignment(assignment);
-        // assignmentFiles.setFile(savedFile);
-        // assignmentFilesRepository.save(assignmentFiles);
-
         return ResponseEntity.ok("Assignment created successfully.");
     } catch (IOException e) {
         e.printStackTrace(); // Handle or log the exception appropriately
@@ -259,5 +226,33 @@ public class AssignmentService {
         }
     }
 
+    // public String deleteAssignment(int assignmentId) {
+
+    //     try {
+    //         // Retrieve file paths associated with the assignment
+    //         List<String> filePaths = fileRepository.findPathsByAssignmentId(assignmentId);
+
+    //         // Delete files from the filesystem
+    //         for (String path : filePaths) {
+    //             Fil file = new Fil(path);
+    //             if (file.exists()) {
+    //                 file.delete();
+    //             }
+    //         }
+
+    //         // Delete assignment from the database
+    //         assignmentRepository.deleteById(assignmentId);
+
+    //         // Delete files from the database
+    //         fileRepository.deleteByAssignmentId(assignmentId);
+
+    //         return "Assignment deleted successfully";
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         return "Error in deleting assignment";
+    //     }
+    // }
+
+    
 }
 

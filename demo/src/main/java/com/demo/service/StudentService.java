@@ -1,5 +1,7 @@
 package com.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,5 +16,9 @@ public class StudentService {
     public boolean login(String id, String password){
         Student student = studentRepository.findByIdAndPassword(id, password);
         return student != null;
+    }
+
+    public List<Student> getStudentsNotSubmitted(Long aId) {
+        return studentRepository.findStudentsWithoutSubmission(aId);
     }
 }
