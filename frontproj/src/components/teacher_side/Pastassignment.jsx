@@ -1,19 +1,42 @@
-import React from "react";
-import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
-import Assignment_view_teacher from "./Assignment_view_teacher";
+import React,{useEffect,useState} from "react";
+import { Link , useLocation } from 'react-router-dom';
 
 export default function Pastassignment(){
 
-    const [pastAssignments , setPastAssignments] = React.useState([])
+    const [pastAssignments , setPastAssignments] = useState([])
     console.log(pastAssignments)
 
     const location = useLocation();
     const propsData = location.state;
 
-    React.useEffect(()=>{
-        fetch(`http://localhost:8000/teacher/pastassignments/${propsData.uname}`)
-            .then(res => res.json())
-            .then(data => setPastAssignments(data.pastAssignments))
+    const fetchPastAssignments = async () =>{
+        try {
+            const teacherId = propsData.uname; // Assuming the student ID is in propsData
+            const url = `http://localhost:8080/api/teacher/pastassignments/${teacherId}`;
+
+            var res = await fetch(url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json', // Set the content type to JSON
+          },
+        });
+
+        var reply = await res.json()
+        // console.log(reply)
+
+        if (res.status === 200) {
+            setPastAssignments(reply); // Update the state with the fetched data
+          } else if (reply.error) {
+            alert(reply.error);
+          }
+            
+        } catch (error) {
+            alert(`Failed to fetch ${error}`);
+        }
+    }
+
+    useEffect(()=>{
+        fetchPastAssignments();
     },[])
 
     // console.log(pastAssignments)
@@ -33,12 +56,12 @@ export default function Pastassignment(){
     //     {id: 12,aname : "Assignemnt-3", created_to : "Section-C", end_date : 2}
     // ]
     
-    const alist = pastAssignments.map((assignment)=>(
-        <div key={assignment.a_id} className="assignment_box">
+    const alist = pastAssignments?.map((assignment)=>(
+        <div key={assignment.id} className="assignment_box">
             <h4 className="details"> {assignment.name}</h4>
-            <h4 className="details"> Created to : {assignment.sec_id}</h4>
-            <h4 className="details"> Ended at : {new Date(assignment.end_time).toLocaleString()}</h4>
-            <Link to={`/teacher/pastassignment/${assignment.a_id}`} state={assignment}>
+            <h4 className="details"> Created to : {assignment.secId}</h4>
+            <h4 className="details"> Ended at : {new Date(assignment.endTime).toLocaleString()}</h4>
+            <Link to={`/teacher/pastassignment/${assignment.id}`} state={assignment}>
             <button className="go_to_assignment">Go to the assignment</button>
             </Link>
         </div>

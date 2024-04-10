@@ -135,12 +135,11 @@ public class AssignmentController {
     }
 
 
-
     @PostMapping("/teacher/postassignment")
     public ResponseEntity<String> uploadAssignmentWithFile(@RequestParam("file") MultipartFile[] files,
                                             @RequestParam("aname") String aname,
-                                            @RequestParam("endTime") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date endTime,
-                                            @RequestParam("startTime") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date startTime,
+                                            @RequestParam("endTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime,
+                                            @RequestParam("startTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
                                             @RequestParam("allowLateSubmission") boolean allowLateSubmission,
                                             @RequestParam("max_marks") int maxMarks,
                                             @RequestParam("description") String description,
