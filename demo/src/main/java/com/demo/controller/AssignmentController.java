@@ -2,18 +2,16 @@ package com.demo.controller;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.dto.AssignmentDTO;
 import com.demo.dto.AssignmentDetailsDTO;
-import com.demo.dto.CreateAssignmentDTO;
 import com.demo.model.Assignment;
 import com.demo.service.AssignmentService;
 
@@ -23,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
@@ -54,6 +51,7 @@ public class AssignmentController {
 
         return assignmentDTOs;
     }
+
     @GetMapping("/teacher/pastassignments/{teacherId}")
      public List<AssignmentDTO> loadPastAssignmentsByTeacher(@PathVariable String teacherId) {
         List<Assignment> assignments = assignmentService.loadPastAssignmentsByTeacher(teacherId);
@@ -100,6 +98,7 @@ public class AssignmentController {
 
         return assignmentDTOs;
     }
+
 
     @GetMapping("/assignments/past/{studentId}")
     public List<AssignmentDTO> loadPastAssignments(@PathVariable String studentId) {
@@ -153,4 +152,10 @@ public class AssignmentController {
         return assignmentService.uploadAssignmentWithFile(files, aname, endTime, startTime, allowLateSubmission
                                                             , maxMarks, description, constraints, selectedOption, isRytNow,  isInput);
     }
+
+    // @DeleteMapping("/assignment/{assignmentId}")
+    // public String deleteAssignment(@PathVariable String assignmentId) {
+    //     return assignmentService.deleteAssignment(Integer.parseInt(assignmentId));
+    // }
+    
 }

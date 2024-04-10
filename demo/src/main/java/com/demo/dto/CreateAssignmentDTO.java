@@ -1,12 +1,12 @@
 package com.demo.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
 
 public class CreateAssignmentDTO {
     private String name;
-    private LocalDateTime endTime;
+    private Date endTime;
     private boolean isRytNow;
     private String selectedOption;
     private boolean isInput;
@@ -16,10 +16,10 @@ public class CreateAssignmentDTO {
     private int maxMarks;
     private MultipartFile file; // This field will hold the uploaded file
 
-    private LocalDateTime startTime;
+    private Date startTime;
 
 
-    public CreateAssignmentDTO(String name, LocalDateTime endTime, boolean isRytNow, String selectedOption, boolean isInput,
+    public CreateAssignmentDTO(String name, Date endTime, boolean isRytNow, String selectedOption, boolean isInput,
             String description, String constraints, boolean allowLateSubmission, int maxMarks, MultipartFile file) {
         this.name = name;
         this.endTime = endTime;
@@ -44,12 +44,12 @@ public class CreateAssignmentDTO {
     }
 
 
-    public LocalDateTime getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
@@ -138,12 +138,12 @@ public class CreateAssignmentDTO {
     }
 
 
-    public LocalDateTime getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 

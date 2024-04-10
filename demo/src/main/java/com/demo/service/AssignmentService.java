@@ -1,47 +1,30 @@
 package com.demo.service;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.demo.dto.AssignmentDTO;
 import com.demo.dto.AssignmentDetailsDTO;
-import com.demo.dto.CreateAssignmentDTO;
 import com.demo.dto.FileDTO;
 import com.demo.model.Assignment;
 import com.demo.model.AssignmentFiles;
 import com.demo.model.Fil;
-import com.demo.model.Submission;
-import com.demo.model.SubmissionFiles;
 import com.demo.repository.AssignmentFilesRepository;
 import com.demo.repository.AssignmentRepository;
 import com.demo.repository.FileRepository;
 import com.demo.repository.SectionRepository;
 import com.demo.repository.SectionStudentRepository;
 
-import com.demo.service.FileService;
-
-import org.apache.commons.lang3.StringUtils;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.Path;
 import jakarta.transaction.Transactional;
-
-import java.io.File;
 import java.io.IOException;
 
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Paths;
-// import java.nio.file.Path;
-
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -54,9 +37,6 @@ public class AssignmentService {
     private final FileRepository fileRepository;
 
     private final FileService fileService;
-
-  
-
     
     public AssignmentService(AssignmentRepository assignmentRepository, SectionStudentRepository sectionStudentRepository, AssignmentFilesRepository assignmentFilesRepository,
     FileRepository fileRepository, SectionRepository sectionRepository,FileService fileService) {
@@ -70,15 +50,34 @@ public class AssignmentService {
 
     public List<Assignment> loadLiveAssignmentsByTeacher(String teacherId) {
         List<String> sectionIds = sectionRepository.findSectionIdsByTeacherId(teacherId);
-        Date currentTime = new Date(0);
+        Date currentTime = new Date();
         return assignmentRepository.findBySectionIdIn(sectionIds)
                 .stream()
                 .filter(assignment -> assignment.getEndTime().after(currentTime))
                 .collect(Collectors.toList());
     }
+
     public List<Assignment> loadPastAssignmentsByTeacher(String teacherId) {
         List<String> sectionIds = sectionRepository.findSectionIdsByTeacherId(teacherId);
-        Date currentTime = new Date(0);
+        Date currentTime = new Date();
+        return assignmentRepository.findBySectionIdIn(sectionIds)
+                .stream()
+                .filter(assignment -> assignment.getEndTime().before(currentTime))
+                .collect(Collectors.toList());
+    }
+
+    public List<Assignment> loadLiveAssignments(String studentId) {
+        List<String> sectionIds = sectionStudentRepository.findSectionIdsByStudentId(studentId);
+        Date currentTime = new Date();
+        return assignmentRepository.findBySectionIdIn(sectionIds)
+                .stream()
+                .filter(assignment -> assignment.getEndTime().after(currentTime))
+                .collect(Collectors.toList());
+    }
+
+    public List<Assignment> loadPastAssignments(String studentId) {
+        List<String> sectionIds = sectionStudentRepository.findSectionIdsByStudentId(studentId);
+        Date currentTime = new Date();
         return assignmentRepository.findBySectionIdIn(sectionIds)
                 .stream()
                 .filter(assignment -> assignment.getEndTime().before(currentTime))
@@ -135,24 +134,6 @@ public class AssignmentService {
         return assignmentDetailsDTO;
     }
 
-    public List<Assignment> loadLiveAssignments(String studentId) {
-        List<String> sectionIds = sectionStudentRepository.findSectionIdsByStudentId(studentId);
-        Date currentTime = new Date(0);
-        return assignmentRepository.findBySectionIdIn(sectionIds)
-                .stream()
-                .filter(assignment -> assignment.getEndTime().after(currentTime))
-                .collect(Collectors.toList());
-    }
-
-    public List<Assignment> loadPastAssignments(String studentId) {
-        List<String> sectionIds = sectionStudentRepository.findSectionIdsByStudentId(studentId);
-        Date currentTime = new Date(0);
-        return assignmentRepository.findBySectionIdIn(sectionIds)
-                .stream()
-                .filter(assignment -> assignment.getEndTime().before(currentTime))
-                .collect(Collectors.toList());
-    }
-
 
     @Transactional
     public ResponseEntity<String> uploadAssignmentWithFile( MultipartFile[] files,
@@ -179,23 +160,6 @@ public class AssignmentService {
             fileService.validateFileExtension(file);
             fileService.validateFileSize(file);
         }
-
-        
-
-
-        // // Handle file upload and record creation
-        // String fileName = Paths.get(file.getOriginalFilename()).normalize().toString();
-        // // Path uploadPath = (Path) Paths.get("Uploaded_Files").toAbsolutePath().normalize();
-        // String destinationDirectory = "D://Sem-6//ScholarSub_Springboot/uploads/";
-        // File destinationFile = new File(destinationDirectory + fileName);
-    
-        // file.transferTo(destinationFile);
-
-        // if (!Files.exists(uploadPath, LinkOption.NOFOLLOW_LINKS)) {
-        //     Files.createDirectories(uploadPath);
-        // }
-        // Path filePath = uploadPath.resolve(fileName);
-        // Files.copy(file.getInputStream(), filePath);
 
 
         // Create assignment record
@@ -236,23 +200,6 @@ public class AssignmentService {
             attachFileToAssignment(a_id, fileId);
         }
         
-        
-        // // Create file record
-        // Fil fileEntity = new Fil();
-        // fileEntity.setName(fileName);
-        // fileEntity.setType(file.getContentType());
-        // int fileSize = (int) file.getSize();
-        // fileEntity.setSize(fileSize);
-        // fileEntity.setPath(destinationFile.toString());
-
-        // Fil savedFile = fileRepository.save(fileEntity);
-
-        // Associate the saved file with the assignment
-        // AssignmentFiles assignmentFiles = new AssignmentFiles();
-        // assignmentFiles.setAssignment(assignment);
-        // assignmentFiles.setFile(savedFile);
-        // assignmentFilesRepository.save(assignmentFiles);
-
         return ResponseEntity.ok("Assignment created successfully.");
     } catch (IOException e) {
         e.printStackTrace(); // Handle or log the exception appropriately
@@ -279,5 +226,33 @@ public class AssignmentService {
         }
     }
 
+    // public String deleteAssignment(int assignmentId) {
+
+    //     try {
+    //         // Retrieve file paths associated with the assignment
+    //         List<String> filePaths = fileRepository.findPathsByAssignmentId(assignmentId);
+
+    //         // Delete files from the filesystem
+    //         for (String path : filePaths) {
+    //             Fil file = new Fil(path);
+    //             if (file.exists()) {
+    //                 file.delete();
+    //             }
+    //         }
+
+    //         // Delete assignment from the database
+    //         assignmentRepository.deleteById(assignmentId);
+
+    //         // Delete files from the database
+    //         fileRepository.deleteByAssignmentId(assignmentId);
+
+    //         return "Assignment deleted successfully";
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         return "Error in deleting assignment";
+    //     }
+    // }
+
+    
 }
 

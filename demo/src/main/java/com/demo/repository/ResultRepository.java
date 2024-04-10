@@ -2,6 +2,7 @@ package com.demo.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -22,17 +23,21 @@ public interface ResultRepository extends JpaRepository<Result, Integer> {
     // List<ResultDTO> fetchResult(@Param("sId") int sId, @Param("aId") int aId);
 
     @Query(value = "SELECT " +
-        "s.id AS submission_id, " +
+        "s.sub_id AS submission_id, " +
         "s.tos AS submission_tos, " +
-        "s.assignment_id AS assignment_id, " +
-        "s.student_id AS student_id, " +
+        "s.a_id AS a_id, " +
+        "s.s_id AS s_id, " +
         "r.obtained_marks AS obtained_marks, " +
         "r.feedback AS feedback, " +
         "a.max_marks AS max_marks " +
         "FROM Submission s " +
-        "LEFT JOIN Result r ON s.id = r.submission_id " +
-        "JOIN Assignment a ON s.assignment_id = a.id " +
-        "WHERE s.assignment_id = :aId AND s.student_id = :sId", nativeQuery = true)
-    List<Object[]> fetchResult(int sId, int aId);
+        "LEFT JOIN Result r ON s.sub_id = r.sub_id " +
+        "JOIN Assignment a ON s.a_id = a.a_id " +
+        "WHERE s.a_id = :aId AND s.s_id = :sId", nativeQuery = true)
+    List<Object[]> fetchResult(String sId, int aId);
+
+    // Define custom method to call stored procedure and fetch assignment stats
+    @Procedure(name = "GetAssignmentStats")
+    List<Object[]> getAssignmentStats(int assignmentId);
     
 }
