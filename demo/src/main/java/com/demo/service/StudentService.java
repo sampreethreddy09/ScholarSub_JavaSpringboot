@@ -18,7 +18,7 @@ public class StudentService {
         return student != null;
     }
 
-    public List<Student> getStudentsNotSubmitted(Long aId) {
+    public List<String> getStudentsNotSubmitted(int aId) {
         return studentRepository.findStudentsWithoutSubmission(aId);
     }
 }

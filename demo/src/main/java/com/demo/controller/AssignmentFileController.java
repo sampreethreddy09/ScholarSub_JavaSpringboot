@@ -19,7 +19,7 @@ public class AssignmentFileController {
         this.assignmentFileService = assignmentFileService;
     }
 
-    @GetMapping("/assignment/files/{assignmentId}")
+    @GetMapping("/assignment/file/{assignmentId}")
     public List<FileDTO> getFilesByAssignmentId(@PathVariable int assignmentId) {
         return assignmentFileService.getFilesByAssignmentId(assignmentId);
     }

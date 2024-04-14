@@ -2,7 +2,6 @@ package com.demo.service;
 
 import com.demo.dto.EvaluateSubmissionDTO;
 import com.demo.dto.ResultDTO;
-import com.demo.model.Result;
 import com.demo.repository.ResultRepository;
 import java.sql.Timestamp;
 import java.util.ArrayList;

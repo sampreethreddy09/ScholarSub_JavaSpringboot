@@ -135,8 +135,5 @@ public class AssignmentDTO {
     public void setMaxMarks(int maxMarks) {
         this.maxMarks = maxMarks;
     }
-
-    
-
     
 }

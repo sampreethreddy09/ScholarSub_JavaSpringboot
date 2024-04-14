@@ -112,7 +112,7 @@ export default function Liveassignment(props) {
     ));
     return (
         <div className="past_page">
-            <h3 className="h3_past_assignments">Student Live Assignments</h3>
+            <h3 className="h3_past_assignments">Live Assignments</h3>
             <div className="root_past_assignments">
                 {alist}
             </div>

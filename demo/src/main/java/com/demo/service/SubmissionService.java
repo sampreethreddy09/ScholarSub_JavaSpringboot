@@ -95,6 +95,23 @@ public class SubmissionService {
             dto.setId(submission.getId());
             dto.setTos(submission.getTos());
             dto.setAssignmentId(submission.getAssignment().getId()); // Assuming you want to include assignment ID
+            dto.setStudentId(submission.getStudent().getId());
+            submissionDTOs.add(dto);
+        }
+
+        return submissionDTOs;
+    }
+
+    public List<SubmissionDTO> getSubmissionsByAssignmentId(int assignmentId) {
+        List<Submission> submissions = submissionRepository.findByAssignmentId(assignmentId);
+        List<SubmissionDTO> submissionDTOs = new ArrayList<>();
+
+        for (Submission submission : submissions) {
+            SubmissionDTO dto = new SubmissionDTO();
+            dto.setId(submission.getId());
+            dto.setTos(submission.getTos());
+            dto.setAssignmentId(submission.getAssignment().getId());
+            dto.setStudentId(submission.getStudent().getId());
             submissionDTOs.add(dto);
         }
 

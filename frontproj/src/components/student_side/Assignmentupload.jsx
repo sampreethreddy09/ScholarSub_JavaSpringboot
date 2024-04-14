@@ -21,7 +21,7 @@ export default function Assignmentupload() {
 
     const getAssignmentFile = async () => {
         
-            var res = await fetch(`http://localhost:8080/api/assignment/files/${propsData.id}`, {
+            var res = await fetch(`http://localhost:8080/api/assignment/file/${propsData.id}`, {
                 method: "GET"
             })
             var reply = await res.json()
@@ -147,7 +147,7 @@ export default function Assignmentupload() {
 
     return (
         <div className="past_page">
-            <h3 className="h3_past_assignments">Student Assignment Upload</h3>
+            <h3 className="h3_past_assignments">Assignment Upload - {propsData.name} </h3>
 
             {isS ? <div>
                 <h3 className="h3_past_assignments"> You have already submitted the Assignment</h3>

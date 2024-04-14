@@ -1,27 +1,26 @@
-import React from "react";
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import React ,{useState , useEffect} from "react";
 import { useLocation } from "react-router-dom";
 
 export default function Submission_view_teacher(props){
 
     const location = useLocation();
     const propsData = location.state;
-    // console.log("props", propsData)
+    console.log("props", propsData)
     // console.log(propsData.id)
 
-    const [subData, setSubData] = React.useState({
+    const [subData, setSubData] = useState({
         assigned_marks : propsData.obtained_marks,
         assigned_feedback : propsData.feedback,
     })
     // console.log("subdata", subData)
-    const [aDetails, setADetails] = React.useState([])
+    const [aDetails, setADetails] = useState([])
     // console.log("as_details",aDetails)
 
-    const [codeContent, setCodeContent] = React.useState("");
-    const [filename, setFilename] = React.useState("");
+    const [codeContent, setCodeContent] = useState("");
+    const [filename, setFilename] = useState("");
 
     const getAssignmentDetails = async() =>{
-        var res =await fetch(`http://localhost:8000/student/assignments/${propsData.a_id}`,{
+        var res =await fetch(`http://localhost:8080/api/assignment/${propsData.assignmentId}`,{
             method : "GET"
         })
         var reply =await res.json()
@@ -34,9 +33,26 @@ export default function Submission_view_teacher(props){
         }
     }
 
-    React.useEffect(()=>{
-        getAssignmentDetails()
+    useEffect(()=>{
+        getAssignmentDetails();
+        getSubmissionFile();
     },[])
+
+    useEffect(() => {
+        if (filename === "") return;
+        // Adjust the URL based on your Express server and file path
+        const fileUrl = `http://localhost:8080/file-content/${propsData.assignmentId}/${filename}`;
+
+        // Fetch the content of the code file
+        fetch(fileUrl)
+            .then((response) => response.text())
+            .then((data) => {
+                setCodeContent(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching file content:', error);
+            });
+    }, [filename]);
 
 
     function handleChange(event){
@@ -65,53 +81,38 @@ export default function Submission_view_teacher(props){
         // console.log(formData)
         console.log(subData, propsData);
 
-        try {
-            await fetch("http://localhost:8000/teacher/evaluate", {
-                method: "POST",
+            var res = await fetch("http://localhost:8080/api/teacher/evaluate", {
+                method: "PUT",
                 body: JSON.stringify({...subData, ...propsData}),
                 headers: {
                     'Content-Type': 'application/json', // Set the content type to JSON
                 },
             });
 
-            alert("Result added");
-        } catch (error) {
-            console.error("Error adding result:", error);
-            alert("Error adding result");
+            var reply = await res.text();
+
+            if(reply){
+                alert("Result added");
+            }else if(reply.error){
+                console.log(reply.error)
+            } 
+        } 
+
+    const getSubmissionFile = async () => {
+        var res = await fetch(`http://localhost:8080/api/submission/file/${propsData.id}`, {
+            method: "GET"
+        })
+        var reply = await res.json()
+
+        if (reply) {
+                setFilename(reply[0].name)
+                console.log("filename", reply[0].name)
+        }
+        else if (reply.error) {
+            console.log(error)
         }
     }
 
-    React.useEffect(() => {
-        // Adjust the URL based on your Express server and file path
-        const fileUrl = `http://localhost:8000/teacher/submission-file-content/${propsData.a_id}/${propsData.sub_id}`;
-
-        // Fetch the content of the code file
-        fetch(fileUrl)
-        .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.json(); // Assuming your server always sends JSON
-          })
-          .then(data => {
-            if (data.filename) {
-              // Handle JSON response
-              // Set your jsonState with data.filename
-            //   console.log('Received filename:', data.filename);
-              setFilename(data.filename)
-            } 
-            if(data.code) {
-              // Handle file content response
-              // Set your fileContentState with the file content
-            //   console.log('Received File Content:', data.code);
-              setCodeContent(data.code)
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            // Handle error state if necessary
-          });
-    }, []);
 
     const handleDownload = () => {
         const blob = new Blob([codeContent], { type: 'text/plain' });
@@ -133,13 +134,14 @@ export default function Submission_view_teacher(props){
         var extension = parts[parts.length - 1];
       
         return extension;
-      }
-      var fileExtension = extractExtension(filename);
+    };
+
+    var fileExtension = extractExtension(filename);
     
     return(
         <div className="submission_view_page">
-            <h3 className="submission_view_page_h3">Submission of {propsData.name}</h3>
-            <h5 className="submission_view_page_h5">SRN : {propsData.s_id}</h5>
+            <h3 className="submission_view_page_h3">Submission for {aDetails.name}</h3>
+            <h5 className="submission_view_page_h5">By Student {propsData.studentId}</h5>
             <h3 className="h3_post_assignment">Submitted File : </h3>
             { (fileExtension !== "pdf") ?
                     <div>
@@ -183,12 +185,14 @@ export default function Submission_view_teacher(props){
                 <div>    <p>{filename}</p>
                     <iframe
                         title="File Viewer"
-                        src={`http://localhost:8000/files/${propsData.a_id}/${filename}`}
+                        src={`http://localhost:8080/files/${propsData.assignmentId}/${filename}`}
                         width="600"
                         height="400"
                     ></iframe>
                 </div>
                 }
+
+                <h5 className="submission_view_page_h5">Max marks : {aDetails.maxMarks}</h5>
 
                 { propsData.obtained_marks ? <h5 className="submission_view_page_h5">Assigned Marks : {propsData.obtained_marks} </h5> : <h5 className="submission_view_page_h5">Assign Marks : </h5>}
                 <input className="input_marks" type="text" value={subData.assigned_marks} onChange={handleChange}
