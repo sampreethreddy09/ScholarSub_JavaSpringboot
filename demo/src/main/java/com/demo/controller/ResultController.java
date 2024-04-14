@@ -53,7 +53,7 @@ public class ResultController {
     }
 
     @GetMapping("/students/notsubmitted/{aId}")
-    public List<Student> getStudentsNotSubmitted(@PathVariable Long aId) {
+    public List<String> getStudentsNotSubmitted(@PathVariable int aId) {
         return studentService.getStudentsNotSubmitted(aId);
     }
 

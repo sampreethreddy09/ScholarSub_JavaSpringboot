@@ -15,5 +15,5 @@ public interface StudentRepository extends JpaRepository<Student, String>{
     Student findByIdAndPassword(String id, String password);
 
     @Query(value = "CALL ListStudentsWithoutSubmission(:aId)", nativeQuery = true)
-    List<Student> findStudentsWithoutSubmission(@Param("aId") Long aId);
+    List<String> findStudentsWithoutSubmission(@Param("aId") int aId);
 }

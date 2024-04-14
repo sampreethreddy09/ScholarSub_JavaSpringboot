@@ -7,14 +7,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.demo.dto.SubmissionDTO;
 import com.demo.service.FileService;
 import com.demo.service.SubmissionService;
 
 @RestController
-@RequestMapping("/api/student")
+@RequestMapping("/api")
 public class SubmissionController {
 
     private FileService fileService;
@@ -25,7 +27,7 @@ public class SubmissionController {
         this.submissionService = submissionService;
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/student/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("files") MultipartFile[] files,
                                              @RequestParam("s_id") String s_id,
                                              @RequestParam("a_id") String a_id,
@@ -41,7 +43,7 @@ public class SubmissionController {
         }
     }
 
-    @GetMapping("/submissions/{studentId}")
+    @GetMapping("/student/submissions/{studentId}")
     public ResponseEntity<List<SubmissionDTO>> getSubmissionsByStudentId(@PathVariable("studentId") String studentId) {
         List<SubmissionDTO> submissions = submissionService.getSubmissionsByStudentId(studentId);
         if (submissions.isEmpty()) {
@@ -50,9 +52,28 @@ public class SubmissionController {
         return new ResponseEntity<>(submissions, HttpStatus.OK);
     }
 
+    @GetMapping("/teacher/submissions/{assignmentId}")
+    public ResponseEntity<Map<String, Object>> getSubmissionsByAssignmentId(@PathVariable("assignmentId") String assignmentId) {
+
+        // Convert the String assignmentId to an int
+        int assignmentid = Integer.parseInt(assignmentId);
+        List<SubmissionDTO> submissions = submissionService.getSubmissionsByAssignmentId(assignmentid);
+
+        int submissionCount = submissions.size();
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("submissions", submissions);
+        response.put("count", submissionCount);
+
+        if (submissions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(response);
+    }
+
     // @GetMapping("/submission/fetch/{assignmentId}")
-    // public SubmissionStatsDto fetchSubmissionStats(@PathVariable String assignmentId) {
-    //     return submissionService.fetchSubmissionStats(Integer.parseInt(assignmentId));
+    // public SubmissionStatsDto fetchSubmissionStats(@PathVariable int assignmentId) {
+    //     return submissionService.fetchSubmissionStats(assignmentId);
     // }
 
 }

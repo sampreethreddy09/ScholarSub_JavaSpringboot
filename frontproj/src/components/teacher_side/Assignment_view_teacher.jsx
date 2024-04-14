@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import React, { useState ,useEffect } from "react";
+import { Link} from 'react-router-dom';
 import { useLocation } from "react-router-dom";
 import { CsvToHtmlTable } from 'react-csv-to-table'
 
@@ -8,61 +8,63 @@ export default function Assignment_view_teacher(props){
     const location = useLocation();
     const propsData = location.state;
     // console.log(propsData)
-    console.log("a_id",propsData.a_id)
+    console.log("a_id",propsData.id)
 
-    const [myData, setMyData] = React.useState([])
-    const [csv, setCsv] = React.useState([])
-    const [sws, setSws] = React.useState([])
-    const [count, setCount] = React.useState()
+    const [submissionsData, setSubmissionsData] = useState([])
+    // const [csv, setCsv] = useState([])
+    const [sws, setSws] = useState([])
+    const [count, setCount] = useState()
     
 
     const getSubmissions = async() =>{
-        var res = await fetch(`http://localhost:8000/teacher/pastsubmission/${propsData.a_id}`,{
+        var res = await fetch(`http://localhost:8080/api/teacher/submissions/${propsData.id}`,{
             method : "GET"
         })
 
         var reply = await res.json()
-        console.log("replt",reply)
-        if(reply.submissions){
-            setMyData(reply.submissions)
+        console.log("reply",reply)
+        if(reply){
+            setSubmissionsData(reply.submissions)
             setCount(reply.count)
         }else if(reply.error){
             console.log(reply.error)
         }
     }
-    React.useEffect(()=>{
+
+    useEffect(()=>{
         getSubmissions()
     },[])
 
     const notsubmitted = async() =>{
-        var res = await fetch(`http://localhost:8000/teacher/notsubmitted/${propsData.a_id}`,{
+        var res = await fetch(`http://localhost:8080/api/students/notsubmitted/${propsData.id}`,{
             method : "GET"
         })
 
         var reply = await res.json()
-        console.log(reply.studentsWithoutSubmission)
-        if(reply.studentsWithoutSubmission){
-            setSws(reply.studentsWithoutSubmission)
+        console.log(reply)
+        if(reply){
+            setSws(reply)
         }else if(reply.error){
             console.log(reply.error)
         }
     }
-    React.useEffect(()=>{
+
+    useEffect(()=>{
         notsubmitted()
     },[])
 
     console.log(sws)
 
     const swslist = sws.map((s)=>{
-        return <h4 key={s.s_id} className="assignment_view_page_h5"> - {s.s_id} </h4>
+        return <h4 key={s} className="assignment_view_page_h5"> - {s} </h4>
     })
 
-    const slist = myData.map((submission)=>(
-        <div key={submission.sub_id} className="assignment_view_box">
-            <h4 className="assignment_view_box_details"> {submission.s_id}</h4>
-            <h4 className="assignment_view_box_details"> {submission.name}</h4>
+    const slist = submissionsData.map((submission)=>(
+        <div key={submission.id} className="assignment_view_box">
+            <h4 className="assignment_view_box_details"> {submission.id}</h4>
+            <h4 className="assignment_view_box_details"> {submission.studentId}</h4>
 
-            <h4 className="assignment_view_box_details"> {submission.tos <= propsData.end_time ? "In Time" : "Late"} </h4>
+            <h4 className="assignment_view_box_details"> {submission.tos <= propsData.endTime ? "In Time" : "Late"} </h4>
             {/* <h4 className="assignment_view_box_details"> {submission.obtained_marks}</h4> */}
             {submission.obtained_marks ? 
                 <h4 className="assignment_view_box_details">{submission.obtained_marks}</h4> :
@@ -75,10 +77,10 @@ export default function Assignment_view_teacher(props){
         </div>
     ))
 
-    const [codeContent, setCodeContent] = React.useState('');
-    const [resultReport, setResultReport] = React.useState({});
+    const [codeContent, setCodeContent] = useState('');
+    const [resultReport, setResultReport] = useState({});
 
-    // React.useEffect(() => {
+    // useEffect(() => {
     //     // Adjust the URL based on your Express server and file path
     //     const fileUrl = `http://localhost:8000/plagreport/output.csv`;
 
@@ -95,7 +97,7 @@ export default function Assignment_view_teacher(props){
 
 
     const handlePlag= async()=>{
-        var res = await fetch(`http://localhost:8000/teacher/plagiarism/${propsData.a_id}`,{
+        var res = await fetch(`http://localhost:8000/teacher/plagiarism/${propsData.id}`,{
             method: "GET",
         })
 
@@ -124,20 +126,20 @@ export default function Assignment_view_teacher(props){
         }
     }
 
-    React.useEffect(() => {
-        // Adjust the URL based on your Express server and file path
-        const fileUrl = `http://localhost:8000/teacher/resultreport/${propsData.a_id}`;
+    // useEffect(() => {
+    //     // Adjust the URL based on your Express server and file path
+    //     const fileUrl = `http://localhost:8000/teacher/resultreport/${propsData.a_id}`;
 
-        // Fetch the content of the code file
-        fetch(fileUrl)
-            .then((response) => response.json())
-            .then((data) => {
-                setResultReport(data[0]);
-            })
-            .catch((error) => {
-                console.error('Error fetching Result Report:', error);
-            });
-    },[])
+    //     // Fetch the content of the code file
+    //     fetch(fileUrl)
+    //         .then((response) => response.json())
+    //         .then((data) => {
+    //             setResultReport(data[0]);
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error fetching Result Report:', error);
+    //         });
+    // },[])
 
     console.log("result report", resultReport)
 

@@ -88,7 +88,7 @@ export default function CreateAssignment() {
             if (!response.ok) {
               throw new Error(`Error! : ${response.message}`);
             }
-            return response.json();
+            return response.text();
           })
             .then((data) => {
                 alert("Assignment uploaded successfully");
