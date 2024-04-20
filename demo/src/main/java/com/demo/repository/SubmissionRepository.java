@@ -15,7 +15,7 @@ public interface SubmissionRepository extends JpaRepository<Submission, Integer>
     List<Submission> findByAssignmentId(int assignmentId);
 
     // Define custom query to fetch submissions with obtained marks and feedback
-    @Query("SELECT s, r.obtainedMarks, r.feedback, st FROM Submission s LEFT JOIN Result r ON s.id = r.submission.id JOIN Student st ON s.student.id = st.id WHERE s.assignment.id = ?1")
+    @Query("SELECT s, r.obtainedMarks, r.feedback FROM Submission s LEFT JOIN Result r ON s.id = r.submission.id JOIN Student st ON s.student.id = st.id WHERE s.assignment.id = ?1")
     List<Object[]> fetchSubmissionsWithMarksAndFeedback(int assignmentId);
 
     // Define custom query to count submissions for a specific assignment

@@ -8,17 +8,21 @@ public class SubmissionDTO {
     private Date tos;
     private int assignmentId;
     private String studentId;
+    private int ObtainedMarks;
+    private String feedback;
 
     // Constructors, getters, and setters
 
     public SubmissionDTO() {
     }
 
-    public SubmissionDTO(int id, Date tos, int assignmentId, String studentId) {
+    public SubmissionDTO(int id, Date tos, int assignmentId, String studentId, int obtainedMarks, String feedback) {
         this.id = id;
         this.tos = tos;
         this.assignmentId = assignmentId;
         this.studentId = studentId;
+        this.ObtainedMarks = obtainedMarks; 
+        this.feedback = feedback;
     }
 
     // Getters and setters
@@ -53,6 +57,22 @@ public class SubmissionDTO {
 
     public void setStudentId(String studentId) {
         this.studentId = studentId;
+    }
+
+    public int getObtainedMarks() {
+        return ObtainedMarks;
+    }
+
+    public void setObtainedMarks(int obtainedMarks) {
+        ObtainedMarks = obtainedMarks;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 }
 

@@ -152,9 +152,9 @@ public class AssignmentController {
                                                             , maxMarks, description, constraints, selectedOption, isRytNow,  isInput);
     }
 
-    // @DeleteMapping("/assignment/{assignmentId}")
-    // public String deleteAssignment(@PathVariable String assignmentId) {
-    //     return assignmentService.deleteAssignment(Integer.parseInt(assignmentId));
-    // }
+    @DeleteMapping("/assignment/{assignmentId}")
+    public String deleteAssignment(@PathVariable int assignmentId) {
+        return assignmentService.deleteAssignment(assignmentId);
+    }
     
 }

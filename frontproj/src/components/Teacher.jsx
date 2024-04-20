@@ -28,7 +28,7 @@ export default function Teacher(props) {
         <div className="teacher_outer">
             <div className="teacher">
                 <h1 className="Title">ScholarSub</h1>
-                <h2 className="uname"><span className="hello">👋</span> Hello {propsData.uname}</h2>
+                <h2 className="uname"><span className="hello">👋</span>Hello {propsData.uname}</h2>
             </div>
             <div className="workspace_outer">
                 <div className="teacher_operations">

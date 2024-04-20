@@ -1,0 +1,98 @@
+.toppage{
+    display: flex;
+    justify-content: center;
+}
+
+.assgnpage{
+    background : white;
+    color: dodgerblue;
+    width: 60%;
+    border : 0.5rem solid white;
+    border-radius: 1rem;
+    padding : 2rem;
+    margin : 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.centerheading{
+    display: flex;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.inputbox{
+    width: 100%;
+    padding: 0.5rem 0.5rem;
+    border: 2px solid dodgerblue;
+    color: black;
+    font-size: 1rem;
+    background-color: white;
+    text-shadow: none;
+    border-radius: 7px;
+}
+
+.inputbox::placeholder {
+    font-size: 1rem; /* Adjust the size as needed */
+  }
+
+  select[name="selectedOption"] {
+    width: 100%;
+    padding: 0.5rem 0.5rem;
+    border: 2px solid dodgerblue;
+    color: #7f7f7f;
+    font-size: 1.2rem;
+    background-color: white;
+    text-shadow: none;
+    border-radius: 7px;
+    -webkit-appearance: none; /* Disable default arrow on Safari */
+    -moz-appearance: none; /* Disable default arrow on Firefox */
+    appearance: none; /* Disable default arrow */
+}
+
+.holder{
+    align-items: center;
+}
+
+.checkboxes{
+    display: inline-block;
+    margin-right: 0.5rem;
+
+}
+
+.checkbx{
+    width: 1rem;
+    height: 1rem;
+}
+
+.textarea{
+    width: 100%;
+    height: auto;
+    padding: 0.5rem 0.5rem;
+    border: 2px solid dodgerblue;
+    color: black;
+    font-size: 1rem;
+    background-color: white;
+    text-shadow: none;
+    border-radius: 7px;
+    resize: none;
+}
+
+.buttondiv{
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.postbutton{
+    margin: 1.7rem 1rem;
+    padding: .8rem 1rem;
+    border: none;
+    color: white ;
+    font-size: 1rem;
+    background-color: dodgerblue;
+    text-shadow: none;
+    text-align: center;
+    border-radius: .5rem;
+    cursor: pointer;
+    width: 50%;
+}

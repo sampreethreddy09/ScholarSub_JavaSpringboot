@@ -10,9 +10,9 @@ import java.util.*;
 @RequestMapping("/api")
 public class PlagiarismController {
 
-    @PostMapping("/run-plagiarism-test/{assignmentId}")
+    @GetMapping("/run-plagiarism-test/{assignmentId}")
     public ResponseEntity<String> runPlagiarismTest(@PathVariable int assignmentId) {
-        String targetDirectory = "C:/Users/Uday Kiran Reddy N/Documents/WebDev/ScholarSub/Backend/controllers/Uploaded_Files/" + assignmentId;
+        String targetDirectory = "C:/Users/Uday Kiran Reddy N/Documents/WebDev/ScholarSub_Java/uploaded_files/" + assignmentId;
 
         try {
             // Change directory to the target directory
@@ -39,12 +39,23 @@ public class PlagiarismController {
 
                 Map<String, String> languageMap = new HashMap<>();
                 languageMap.put("txt", "Plain Text");
+                languageMap.put("java", "java");
+                languageMap.put("c", "c");
+                languageMap.put("cpp", "c++");
+                languageMap.put("py", "python");
+                // languageMap.put("java", "java");
+                // languageMap.put("java", "java");
                 // Add more mappings as needed
 
                 String language = languageMap.getOrDefault(fileExtension, "Unknown Language");
 
+                System.out.println("Running plagiarism test for " + fileNames + " files in " + language + " language.");
+
                 // Execute the command
                 String command = "dolos run -l " + language + " " + String.join(" ", fileNames);
+
+                System.out.println("Running command: " + command);
+
                 Process process2 = Runtime.getRuntime().exec(command, null, new File(targetDirectory));
                 process2.waitFor();
 

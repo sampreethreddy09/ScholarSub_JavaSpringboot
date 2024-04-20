@@ -15,4 +15,7 @@ public interface SectionStudentRepository extends JpaRepository<SectionStudent, 
     // Define custom query methods if needed
     @Query("SELECT ss.section.id FROM SectionStudent ss WHERE ss.student.id = :studentId")
     List<String> findSectionIdsByStudentId(@Param("studentId") String studentId);
+
+    @Query("SELECT ss.student.id FROM SectionStudent ss WHERE ss.section.id = :sectionId")
+    List<String> findStudentIdsBySectionId(@Param("sectionId") String sectionId);
 }

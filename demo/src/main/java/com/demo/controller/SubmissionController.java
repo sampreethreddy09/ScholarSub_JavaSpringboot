@@ -31,7 +31,7 @@ public class SubmissionController {
     public ResponseEntity<String> uploadFile(@RequestParam("files") MultipartFile[] files,
                                              @RequestParam("s_id") String s_id,
                                              @RequestParam("a_id") String a_id,
-                                             @RequestParam("end_time") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date end_time,
+                                             @RequestParam("end_time") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date end_time,
                                              @RequestParam("allow_late_submission") boolean allow_late_submission) {
         try {
             fileService.submit(files, s_id, a_id, end_time, allow_late_submission);
@@ -53,27 +53,9 @@ public class SubmissionController {
     }
 
     @GetMapping("/teacher/submissions/{assignmentId}")
-    public ResponseEntity<Map<String, Object>> getSubmissionsByAssignmentId(@PathVariable("assignmentId") String assignmentId) {
-
-        // Convert the String assignmentId to an int
-        int assignmentid = Integer.parseInt(assignmentId);
-        List<SubmissionDTO> submissions = submissionService.getSubmissionsByAssignmentId(assignmentid);
-
-        int submissionCount = submissions.size();
-        
-        Map<String, Object> response = new HashMap<>();
-        response.put("submissions", submissions);
-        response.put("count", submissionCount);
-
-        if (submissions.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(response);
+    public List<SubmissionDTO> getSubmissionsWithMarksAndFeedback(@PathVariable int assignmentId) {
+        return submissionService.fetchSubmissionsWithMarksAndFeedback(assignmentId);
     }
 
-    // @GetMapping("/submission/fetch/{assignmentId}")
-    // public SubmissionStatsDto fetchSubmissionStats(@PathVariable int assignmentId) {
-    //     return submissionService.fetchSubmissionStats(assignmentId);
-    // }
 
 }

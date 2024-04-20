@@ -102,26 +102,20 @@ public class SubmissionService {
         return submissionDTOs;
     }
 
-    public List<SubmissionDTO> getSubmissionsByAssignmentId(int assignmentId) {
-        List<Submission> submissions = submissionRepository.findByAssignmentId(assignmentId);
-        List<SubmissionDTO> submissionDTOs = new ArrayList<>();
+    public List<SubmissionDTO> fetchSubmissionsWithMarksAndFeedback(int assignmentId) {
+        List<Object[]> results = submissionRepository.fetchSubmissionsWithMarksAndFeedback(assignmentId);
+        List<SubmissionDTO> submissions = new ArrayList<>();
 
-        for (Submission submission : submissions) {
-            SubmissionDTO dto = new SubmissionDTO();
-            dto.setId(submission.getId());
-            dto.setTos(submission.getTos());
-            dto.setAssignmentId(submission.getAssignment().getId());
-            dto.setStudentId(submission.getStudent().getId());
-            submissionDTOs.add(dto);
+        for (Object[] result : results) {
+            Submission submission = (Submission) result[0];
+            Integer obtainedMarks = (Integer) result[1];
+            String feedback = (String) result[2];
+
+            SubmissionDTO submissionDTO = new SubmissionDTO(submission.getId(), submission.getTos(),
+                    submission.getAssignment().getId(), submission.getStudent().getId(), obtainedMarks, feedback);
+            submissions.add(submissionDTO);
         }
 
-        return submissionDTOs;
+        return submissions;
     }
-
-    // public SubmissionStatsDto fetchSubmissionStats(int assignmentId) {
-    //     List<Object[]> submissionsWithMarksAndFeedback = submissionRepository.fetchSubmissionsWithMarksAndFeedback(assignmentId);
-    //     Integer submissionCount = submissionRepository.countSubmissionsByAssignmentId(assignmentId);
-
-    //     return new SubmissionStatsDto(submissionCount, submissionsWithMarksAndFeedback);
-    // }
 }

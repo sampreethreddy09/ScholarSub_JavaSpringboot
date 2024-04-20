@@ -9,8 +9,8 @@ export default function Submission_view_teacher(props){
     // console.log(propsData.id)
 
     const [subData, setSubData] = useState({
-        assigned_marks : propsData.obtained_marks,
-        assigned_feedback : propsData.feedback,
+        assigned_marks : propsData.obtainedMarks || "",
+        assigned_feedback : propsData.feedback || "",
     })
     // console.log("subdata", subData)
     const [aDetails, setADetails] = useState([])
@@ -36,8 +36,10 @@ export default function Submission_view_teacher(props){
     useEffect(()=>{
         getAssignmentDetails();
         getSubmissionFile();
-    },[])
+    },[]) 
 
+
+    // get file-content from server and set it to codeContent
     useEffect(() => {
         if (filename === "") return;
         // Adjust the URL based on your Express server and file path
@@ -81,9 +83,15 @@ export default function Submission_view_teacher(props){
         // console.log(formData)
         console.log(subData, propsData);
 
+        const dataToSend = {
+            obtainedMarks : subData.assigned_marks,
+            feedback : subData.assigned_feedback,
+            subId: propsData.id
+        };
+
             var res = await fetch("http://localhost:8080/api/teacher/evaluate", {
                 method: "PUT",
-                body: JSON.stringify({...subData, ...propsData}),
+                body: JSON.stringify(dataToSend),
                 headers: {
                     'Content-Type': 'application/json', // Set the content type to JSON
                 },

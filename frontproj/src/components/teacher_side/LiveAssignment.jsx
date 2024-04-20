@@ -52,11 +52,11 @@ export default function Liveassignment(){
 
     async function delete_Assignment(a_id){
         console.log(a_id)
-        var res = await fetch(`http://localhost:8080/teacher/assignmentdelete/${a_id}`,{
-            method: "GET",
+        var res = await fetch(`http://localhost:8080/api/assignment/${a_id}`,{
+            method: "DELETE",
         })
 
-        var reply = await res.json()
+        var reply = await res.text()
         console.log(reply)
 
         if(reply){

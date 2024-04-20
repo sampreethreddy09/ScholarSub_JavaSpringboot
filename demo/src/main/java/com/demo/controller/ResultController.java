@@ -57,9 +57,9 @@ public class ResultController {
         return studentService.getStudentsNotSubmitted(aId);
     }
 
-    // @GetMapping("/assignment/stats/{assignmentId}")
-    // public List<Object[]> getAssignmentStats(@PathVariable String assignmentId) {
-    //     return resultService.getAssignmentStats(Integer.parseInt(assignmentId));
-    // }
+    @GetMapping("/assignment/stats/{assignmentId}")
+    public List<Object[]> getAssignmentStats(@PathVariable String assignmentId) {
+        return resultService.getAssignmentStats(Integer.parseInt(assignmentId));
+    }
 
 }

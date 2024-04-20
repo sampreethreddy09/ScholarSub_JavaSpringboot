@@ -19,7 +19,10 @@ import com.demo.repository.SectionStudentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -226,33 +229,45 @@ public class AssignmentService {
         }
     }
 
-    // public String deleteAssignment(int assignmentId) {
-
-    //     try {
-    //         // Retrieve file paths associated with the assignment
-    //         List<String> filePaths = fileRepository.findPathsByAssignmentId(assignmentId);
-
-    //         // Delete files from the filesystem
-    //         for (String path : filePaths) {
-    //             Fil file = new Fil(path);
-    //             if (file.exists()) {
-    //                 file.delete();
-    //             }
-    //         }
-
-    //         // Delete assignment from the database
-    //         assignmentRepository.deleteById(assignmentId);
-
-    //         // Delete files from the database
-    //         fileRepository.deleteByAssignmentId(assignmentId);
-
-    //         return "Assignment deleted successfully";
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         return "Error in deleting assignment";
-    //     }
-    // }
-
     
+    // public List<Assignment> findAssignmentsDueSoon() {
+    //     // Calculate the current time and the time 2 hours from now
+    //     LocalDateTime currentTime = LocalDateTime.now();
+    //     LocalDateTime twoHoursFromNow = currentTime.plusHours(2);
+
+    //     // Query the database for assignments with deadlines within the next 2 hours
+    //     return assignmentRepository.findByDeadlineBetween(currentTime, twoHoursFromNow);
+    // }
+    
+    
+    @Transactional
+    public String deleteAssignment(int assignmentId) {
+
+        try {
+            // Retrieve file paths associated with the assignment
+            List<String> filePaths = fileRepository.findPathsByAssignmentId(assignmentId);
+
+            System.out.println(filePaths);
+    
+            // Delete files from the filesystem
+            for (String path : filePaths) {
+                Path filePath = Paths.get(path);
+                if (Files.exists(filePath)) {
+                    Files.delete(filePath);
+                }
+            }
+    
+            // Delete assignment from the database
+            assignmentRepository.deleteById(assignmentId);
+    
+            // Delete files from the database
+            fileRepository.deleteByAssignmentId(assignmentId);
+    
+            return "Assignment deleted successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error in deleting assignment";
+        }
+    }
 }
 

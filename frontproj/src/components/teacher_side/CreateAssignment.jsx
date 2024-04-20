@@ -1,6 +1,7 @@
 import React from "react"
 
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import "../css/createassgn.css"
 
 export default function CreateAssignment() {
 
@@ -8,16 +9,16 @@ export default function CreateAssignment() {
     const propsData = location.state;
 
     const [postData, setPostData] = React.useState({
-        aname: "", 
-        selectedOption: "", 
-        isRytNow: true, 
-        startTime: "", 
-        endTime: "", 
-        isInput: true, 
-        description: "", 
-        constraints: "", 
+        aname: "",
+        selectedOption: "",
+        isRytNow: true,
+        startTime: "",
+        endTime: "",
+        isInput: true,
+        description: "",
+        constraints: "",
         allowLateSubmission: 0,
-        max_marks : 0
+        max_marks: 0
     })
     const [file, setFile] = React.useState(null);
     const [section, setSections] = React.useState([])
@@ -67,12 +68,12 @@ export default function CreateAssignment() {
 
         const formData = new FormData();
         formData.append("file", file);
-    
+
         // Append other form data as well
         for (const key in postData) {
-          formData.append(key, postData[key]);
+            formData.append(key, postData[key]);
         }
-    
+
 
         console.log("formdata", formData)
 
@@ -84,12 +85,12 @@ export default function CreateAssignment() {
             // }
 
         })
-        .then(response => {
-            if (!response.ok) {
-              throw new Error(`Error! : ${response.message}`);
-            }
-            return response.text();
-          })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error! : ${response.message}`);
+                }
+                return response.text();
+            })
             .then((data) => {
                 alert("Assignment uploaded successfully");
             })
@@ -99,6 +100,12 @@ export default function CreateAssignment() {
             });
     };
 
+    const autoExpand = (event) => {
+        const textarea = event.target;
+        textarea.style.height = 'auto'; // Reset textarea height to allow it to shrink back if necessary
+        textarea.style.height = (textarea.scrollHeight + 10) + 'px'; // Set the new height to fit the content, plus some padding
+    };
+
     // const sectionList = section.map((s) => (
     //     <option key={s.sec_id} value={s.sec_id}>
     //         {s.name}
@@ -106,68 +113,74 @@ export default function CreateAssignment() {
     // ));
 
     return (
-        <div className="post_page">
-            <h3 className="h3_post_assignment"> Assignment Name </h3>
-            <input name="aname" type="text" className="inputs"
-                placeholder="Name of the Assignment"
-                onChange={handleChange}
-            />
-            <h3 className="h3_post_assignment"> Section </h3>
-            <select name="selectedOption" value={postData.selectedOption} onChange={handleChange}>
-                <option value="select">Select a section</option>
-                {section.map((sectionItem) => (
-                    <option key={sectionItem.secId} value={sectionItem.secId}>
-                        {sectionItem.secName}
-                    </option>
-                ))}
-            </select>
-            <br></br><br></br>
+        <main className="toppage">
+            <div className="assgnpage">
+                <h1 className="centerheading">Create Assignment</h1>
+                <h3 className="h3_post_assignment"> Assignment Name </h3>
+                <input name="aname" type="text" className="inputbox"
+                    placeholder="Name of the Assignment"
+                    onChange={handleChange}
+                />
+                <h3 className="h3_post_assignment"> Section </h3>
+                <select name="selectedOption" value={postData.selectedOption} onChange={handleChange}>
+                    <option value="select">Select a section</option>
+                    {section.map((sectionItem) => (
+                        <option key={sectionItem.secId} value={sectionItem.secId}>
+                            {sectionItem.secName}
+                        </option>
+                    ))}
+                </select>
+                <br></br><br></br>
 
 
-            <label htmlFor="isRytNow" className="h3_post_assignment"> Schedule right now ? </label>
-            <input id="isRytNow" type="checkbox" checked={postData.isRytNow} onChange={handleChange} name="isRytNow"></input> <br></br>
-            {!postData.isRytNow ? <h3 className="h3_post_assignment">Start Time </h3> : ""}
-            {!postData.isRytNow ? <input type="text" placeholder="ex : 2024-10-11 09:00:00.000" name="startTime" onChange={handleChange}></input> : ""}
+
+                <h3 className="checkboxes"> Schedule right now ? </h3>
+                <input id="isRytNow" type="checkbox" checked={postData.isRytNow} onChange={handleChange} className="checkbx" name="isRytNow"></input> <br></br>
+                {!postData.isRytNow ? <h3 className="h3_post_assignment">Start Time </h3> : ""}
+                {!postData.isRytNow ? <input type="text" placeholder="ex : 2024-10-11 09:00:00" name="startTime" className="inputbox" onChange={handleChange}></input> : ""}
 
 
-            <h3 className="h3_post_assignment">End Time </h3>
-            <input type="text" placeholder="ex : 2024-10-11 09:00:00" name="endTime" onChange={handleChange}></input>
+                <h3 className="h3_post_assignment">End Time </h3>
+                <input type="text" placeholder="ex : 2024-10-11 09:00:00" name="endTime" className="inputbox" onChange={handleChange}></input>
 
 
-            <br></br>
-            <br></br>
-            <label htmlFor="isInput" className="h3_post_assignment"> Are there any Manuals/Description Files ? </label>
-            <input id="isInput" type="checkbox" checked={postData.isInput} onChange={handleChange} name="isInput"></input> <br></br>
-            {postData.isInput ? <h3 className="h3_post_assignment">Add File</h3> : ""}
-            {postData.isInput ? <input type="file" onChange={handleFileChange} /> : ""}
+                <br></br>
+                <br></br>
+                <h3 className="checkboxes"> Are there any Manuals/Description Files ? </h3>
+                <input id="isInput" type="checkbox" checked={postData.isInput} onChange={handleChange} className="checkbx" name="isInput"></input> <br></br>
+                {postData.isInput ? <h3 className="h3_post_assignment">Add File</h3> : ""}
+                {postData.isInput ? <input type="file" onChange={handleFileChange} /> : ""}
 
-            <br></br>
+                <br></br>
 
 
-            <h3 className="h3_post_assignment"> Assignment Description</h3>
-            <textarea name="description" placeholder="Enter description here" rows={4} cols={50} onChange={handleChange}></textarea>
+                <h3 className="h3_post_assignment"> Assignment Description</h3>
+                <textarea name="description" placeholder="Enter description here" onInput={autoExpand} className="textarea" onChange={handleChange}></textarea>
 
-            <h3 className="h3_post_assignment"> Submission Constraints</h3>
-            <textarea name="constraints" placeholder="Enter submission constraints here" rows={4} cols={50} onChange={handleChange}></textarea>
-            
+                <h3 className="h3_post_assignment"> Submission Constraints</h3>
+                <textarea name="constraints" placeholder="Enter submission constraints here" onInput={autoExpand} className="textarea" onChange={handleChange}></textarea>
 
-            <h3 className="h3_post_assignment"> Max Marks </h3>
-            <input name="max_marks" type="text" className="input_marks"
-                placeholder=""
-                onChange={handleChange}
-            />
-            <br></br>
-            <br></br>
 
-            <label htmlFor="allowlate" className="h3_post_assignment"> Allow Late Submission ? </label>
-            <input id="allowlate" type="checkbox" checked={postData.allowLateSubmission} onChange={handleChange} name="allowLateSubmission"></input> 
-            
-            <br></br>
-            <br></br>
+                <h3 className="h3_post_assignment"> Max Marks </h3>
+                <input name="max_marks" type="text" className="inputbox"
+                    placeholder=""
+                    onChange={handleChange}
+                />
+                <br></br>
+                <br></br>
 
-            <button type="submit" className="login_button" onClick={handleSubmit}>
-                Post
-            </button>
-        </div>
+                <h3 className="checkboxes"> Allow Late Submission ? </h3>
+                <input id="allowlate" type="checkbox" checked={postData.allowLateSubmission} className="checkbx" onChange={handleChange} name="allowLateSubmission"></input>
+
+                <br></br>
+                <br></br>
+
+                <div className="buttondiv">
+                    <button type="submit" className="postbutton" onClick={handleSubmit}>
+                        Post
+                    </button>
+                </div>
+            </div>
+        </main>
     )
 }

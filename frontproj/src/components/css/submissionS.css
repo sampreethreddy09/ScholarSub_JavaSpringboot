@@ -1,0 +1,18 @@
+.evalclass{
+    background : white;
+    color: #4852B7;
+    border : 0.5rem solid white;
+    border-radius: 1rem;
+    padding : 1rem;
+    margin : 3rem 1rem;
+
+}
+
+.assgnclass{
+    background : white;
+    color: #4852B7;
+    border : 0.5rem solid white;
+    border-radius: 1rem;
+    padding : 1rem;
+    margin : 2rem 1rem;
+}

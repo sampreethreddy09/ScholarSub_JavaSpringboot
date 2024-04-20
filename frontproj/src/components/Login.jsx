@@ -42,12 +42,13 @@ export default function Login() {
       console.log(data); // Log the parsed JSON data
 
       if (res.ok) {
+        alert("Login Successful")
         navigate(`/${role}`, { state: formData });
         return;
       } 
-      // else if (res.error) {
-      //   alert(res.error);
-      // }
+      else if (res.status === 401) {
+        alert(data);
+      }
     } catch (e) {
       alert(`Login Failed ${e}`);
     }

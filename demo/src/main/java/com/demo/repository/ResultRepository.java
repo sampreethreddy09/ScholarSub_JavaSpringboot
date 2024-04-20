@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.demo.dto.ResultDTO;
 import com.demo.model.Result;
 
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.List;
 @Repository
 public interface ResultRepository extends JpaRepository<Result, Integer> {
     
+    // Below type didn't work , so switched to native query type .
 
     // @Query("SELECT new com.example.dto.ResultDTO(s.id, s.tos, s.assignment.id, s.student.id, r.obtainedMarks, r.feedback, a.maxMarks) " +
     //         "FROM Submission s " +
@@ -36,8 +36,8 @@ public interface ResultRepository extends JpaRepository<Result, Integer> {
         "WHERE s.a_id = :aId AND s.s_id = :sId", nativeQuery = true)
     List<Object[]> fetchResult(String sId, int aId);
 
-    // // Define custom method to call stored procedure and fetch assignment stats
-    // @Procedure(name = "GetAssignmentStats")
-    // List<Object[]> getAssignmentStats(int assignmentId);
+    // Define custom method to call stored procedure and fetch assignment stats
+    @Query(value = "CALL GetAssignmentStats(:aId)", nativeQuery = true)
+    List<Object[]> getAssignmentStats(@Param("aId") int aId);
     
 }

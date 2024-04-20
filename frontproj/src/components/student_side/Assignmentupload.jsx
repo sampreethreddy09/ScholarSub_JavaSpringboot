@@ -7,6 +7,8 @@ export default function Assignmentupload() {
     const location = useLocation();
     const propsData = location.state;
 
+    console.log("propsData", propsData)
+
     let { s_id } = useParams();
 
     const [filename, setFilename] = useState("")
@@ -20,20 +22,24 @@ export default function Assignmentupload() {
     };
 
     const getAssignmentFile = async () => {
-        
-            var res = await fetch(`http://localhost:8080/api/assignment/file/${propsData.id}`, {
-                method: "GET"
-            })
-            var reply = await res.json()
 
-            if (reply) {
-                    setFilename(reply[0].name)
-                    console.log("filename", reply[0].name)
-            }
-            else if (reply.error) {
-                console.log(error)
-            }
+        var res = await fetch(`http://localhost:8080/api/assignment/file/${propsData.id}`, {
+            method: "GET"
+        })
+        var reply = await res.json()
+
+        if (reply) {
+            setFilename(reply[0].name)
+            // console.log("filename", reply[0].name)
+        }
+        else if (reply.error) {
+            console.log(error)
+        }
     }
+
+    const date = new Date(propsData.endTime); // Use your actual date value
+    const formattedDate = date.toISOString().slice(0, 19).replace('T', ' '); // Format date to yyyy-MM-dd HH:mm:ss
+    console.log("formattedDate", formattedDate)
 
     const handleSubmit = async () => {
 
@@ -46,8 +52,10 @@ export default function Assignmentupload() {
         formData.append("files", file);
         formData.append("s_id", s_id);
         formData.append("a_id", propsData.id);
-        formData.append("end_time", propsData.endTime);
+        formData.append("end_time",  formattedDate);
         formData.append("allow_late_submission", propsData.allowLateSubmission);
+
+        console.log("formData", formData)
 
         // for (const key in propsData) {
         //     formData.append(key, propsData[key]);
@@ -100,7 +108,7 @@ export default function Assignmentupload() {
         var extension = parts[parts.length - 1];
 
         return extension;
-    }    
+    }
 
     const isSubmitted = async () => {
         try {
@@ -108,7 +116,7 @@ export default function Assignmentupload() {
                 method: 'GET',
             });
             const reply = await res.json();
-            console.log("isS is", reply);
+            // console.log("isS is", reply);
 
             // Check if there is a submission for the current assignment ID
             setIsS(reply.some(submission => submission.assignmentId === propsData.id));
@@ -120,7 +128,7 @@ export default function Assignmentupload() {
     var fileExtension = extractExtension(filename);
 
     useEffect(() => {
-        if(propsData.inputFilesThere){
+        if (propsData.inputFilesThere) {
             getAssignmentFile()
         }
     }, [propsData])
@@ -203,14 +211,17 @@ export default function Assignmentupload() {
                             </div>
                         </div>
                         :
-                        <div>    <h3 className="h3_past_assignments">Manual :</h3>
-                            <iframe
-                                title="File Viewer"
-                                src={`http://localhost:8080/files/${propsData.id}/${filename}`}
-                                width="800"
-                                height="400"
-                            ></iframe>
-                        </div>
+                        <>
+                            <h3 className="h3_past_assignments">Manual :</h3>
+                            <div className="iframediv">
+                                <iframe
+                                    title="File Viewer"
+                                    src={`http://localhost:8080/files/${propsData.id}/${filename}`}
+                                    width="1200"
+                                    height="700"
+                                ></iframe>
+                            </div>
+                        </>
                     }
                 </>
                 }
