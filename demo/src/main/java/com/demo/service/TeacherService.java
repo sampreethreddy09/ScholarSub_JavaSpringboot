@@ -5,15 +5,16 @@ import org.springframework.stereotype.Service;
 
 import com.demo.model.Teacher;
 import com.demo.repository.TeacherRepository;
-
 @Service
-public class TeacherService {
+public class TeacherService implements LoginService {
 
     @Autowired
     private TeacherRepository teacherRepository;
 
-    public boolean login(String id, String password){
+    @Override
+    public boolean login(String id, String password) {
         Teacher teacher = teacherRepository.findByIdAndPassword(id, password);
         return teacher != null;
     }
 }
+

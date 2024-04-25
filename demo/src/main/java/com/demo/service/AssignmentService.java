@@ -240,7 +240,7 @@ public class AssignmentService {
     // }
     
     
-    @Transactional
+    // @Transactional
     public String deleteAssignment(int assignmentId) {
 
         try {

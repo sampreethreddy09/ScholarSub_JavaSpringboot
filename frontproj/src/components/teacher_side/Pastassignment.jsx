@@ -4,7 +4,7 @@ import { Link , useLocation } from 'react-router-dom';
 export default function Pastassignment(){
 
     const [pastAssignments , setPastAssignments] = useState([])
-    console.log(pastAssignments)
+    //console.log(pastAssignments)
 
     const location = useLocation();
     const propsData = location.state;

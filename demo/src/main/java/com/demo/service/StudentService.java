@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 
 import com.demo.model.Student;
 import com.demo.repository.StudentRepository;
-
 @Service
-public class StudentService {
+public class StudentService implements LoginService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public boolean login(String id, String password){
+    @Override
+    public boolean login(String id, String password) {
         Student student = studentRepository.findByIdAndPassword(id, password);
         return student != null;
     }

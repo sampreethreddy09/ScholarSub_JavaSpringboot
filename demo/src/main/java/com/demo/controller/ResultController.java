@@ -14,20 +14,20 @@ import com.demo.dto.ResultDTO;
 import com.demo.model.Student;
 import com.demo.service.ResultService;
 import com.demo.service.StudentService;
+import com.demo.command.*; 
 
 import java.util.List;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/api")
 public class ResultController {
 
-    @Autowired
-    private ResultService resultService;
-    private StudentService studentService;
+    private final ResultService resultService;
+    private final StudentService studentService;
 
+    @Autowired
     public ResultController(ResultService resultService, StudentService studentService) {
         this.resultService = resultService;
         this.studentService = studentService;
@@ -36,7 +36,8 @@ public class ResultController {
     @PutMapping("/teacher/evaluate")
     public ResponseEntity<String> evaluateSubmission(@RequestBody EvaluateSubmissionDTO data){
         try {
-            resultService.evaluateSubmission(data);
+            Command evaluateCommand = new EvaluateSubmissionCommand(resultService, data, studentService);
+            evaluateCommand.execute();
             return ResponseEntity.ok("Result updated successfully");
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error updating result", e);

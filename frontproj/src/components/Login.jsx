@@ -29,7 +29,7 @@ export default function Login() {
   const handleSubmit = async () => {
     try {
       console.log(formData )
-      var res = await fetch("http://localhost:8080/login", {
+      var res = await fetch("http://localhost:8080/api/login", {
         method: "POST",
         body: JSON.stringify(formData),
         headers: {

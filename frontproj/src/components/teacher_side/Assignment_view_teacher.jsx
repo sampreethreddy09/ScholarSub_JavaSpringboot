@@ -7,7 +7,7 @@ export default function Assignment_view_teacher(props){
     const location = useLocation();
     const propsData = location.state;
     // console.log(propsData)
-    // console.log("a_id",propsData.id)
+    console.log("a_id",propsData.id)
 
     const [submissionsData, setSubmissionsData] = useState([])
     const [sws, setSws] = useState([])
